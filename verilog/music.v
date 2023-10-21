@@ -8,14 +8,15 @@
 /////////////////////////////////////////////////////
 module music(
 	input clk,
-	output reg speaker
+	output reg speaker,
+  output reg finished
 );
 
 reg [30:0] tone;
 always @(posedge clk) tone <= tone+31'd1;
 
 wire [7:0] fullnote;
-music_ROM get_fullnote(.clk(clk), .address(tone[29:22]), .note(fullnote));
+music_ROM get_fullnote(.clk(clk), .address(tone[29:22]), .note(fullnote), .finished(finished));
 
 wire [2:0] octave;
 wire [3:0] note;
@@ -84,10 +85,12 @@ endmodule
 module music_ROM(
 	input clk,
 	input [7:0] address,
-	output reg [7:0] note
+	output reg [7:0] note,
+  output reg finished
 );
 
-always @(posedge clk)
+always @(posedge clk) begin
+finished <= 1'b0;
 case(address)
 	  0: note<= 8'd25;
 	  1: note<= 8'd27;
@@ -332,8 +335,12 @@ case(address)
 	240: note<= 8'd25;
 	241: note<= 8'd0;
 	242: note<= 8'd00;
-	default: note <= 8'd0;
+  default: begin
+    note <= 8'd0;
+    finished <= 1'b1;
+  end
 endcase
+end
 endmodule
 
 /////////////////////////////////////////////////////
