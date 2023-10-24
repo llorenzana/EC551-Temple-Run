@@ -1,0 +1,16 @@
+[package]
+name = "rrender"
+version = "0.1.0"
+authors = ["Nick Cao <nickcao@nichi.co>"]
+edition = "2018"
+
+[dependencies]
+image = "0.23.14"
+anyhow = "1.0.40"
+obj-rs = "0.6.2"
+show-image = { version = "0.8.2", features = [ "image"] }
+fixed = "1.8.0"
+lazy_static = "1.4.0"
+serial = "0.4"
+hex = "0.4.3"
+argh = "0.1.4"
