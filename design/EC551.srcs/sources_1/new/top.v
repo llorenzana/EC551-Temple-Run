@@ -66,6 +66,11 @@ pll pll_i(
   .clk_out1(CLK25MHZ)
 );
 
+music music_i(
+  .clk(CLK25MHZ),
+  .speaker(AUD_PWM)
+);
+
 vga vga_i(
   .clk(CLK25MHZ),
   .hsync(VGA_HS),
@@ -75,7 +80,12 @@ vga vga_i(
   .valid(valid)
 );
 
-assign VGA_R = (hdata >=   0 && hdata < 200) ? 4'b1111 : 4'b0000;
-assign VGA_G = (hdata >= 200 && hdata < 400) ? 4'b1111 : 4'b0000;
-assign VGA_B = (hdata >= 400 && hdata < 640) ? 4'b1111 : 4'b0000;
+blk_mem_gen_0 vram(
+  .addra(hdata+vdata*640),
+  .clka(CLK25MHZ),
+  .dina(12'b0),
+  .douta({VGA_R, VGA_G, VGA_B}),
+  .ena(valid),
+  .wea(1'b0)
+);
 endmodule
