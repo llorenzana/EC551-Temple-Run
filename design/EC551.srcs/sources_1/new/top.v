@@ -55,4 +55,27 @@ output wire VGA_VS,
 // audio
 output wire AUD_PWM
 );
+
+wire [11:0] hdata, vdata;
+wire valid;
+
+wire CLK25MHZ;
+
+pll pll_i(
+  .clk_in1(CLK100MHZ),
+  .clk_out1(CLK25MHZ)
+);
+
+vga vga_i(
+  .clk(CLK25MHZ),
+  .hsync(VGA_HS),
+  .vsync(VGA_VS),
+  .hdata(hdata),
+  .vdata(vdata),
+  .valid(valid)
+);
+
+assign VGA_R = (hdata >=   0 && hdata < 200) ? 4'b1111 : 4'b0000;
+assign VGA_G = (hdata >= 200 && hdata < 400) ? 4'b1111 : 4'b0000;
+assign VGA_B = (hdata >= 400 && hdata < 640) ? 4'b1111 : 4'b0000;
 endmodule
