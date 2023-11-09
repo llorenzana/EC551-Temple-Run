@@ -9,8 +9,13 @@ module integration(
   output logic [3:0]     VGA_B
 );
 
+  logic [31:0] counter;
   logic [11:0] hdata, vdata;
   logic valid;
+
+  always_ff @(posedge CLK100MHZ) begin
+    counter <= counter + 1;
+  end
 
   vga vga_i(
     .clk(CLK100MHZ), // FIXME: should be CLK25MHZ
@@ -39,14 +44,14 @@ module integration(
     .A_next()
   );
 
-  assign R[0] = valid ? hdata[9:6] : 4'b0;
-  assign G[0] = valid ? vdata[9:6] : 4'b0;
-  assign B[0] = valid ? vdata[9:6] : 4'b0;
-  assign A[0] = valid ?          1 : 1'b0;
+  assign R[0] = valid ? counter[31:28] : 4'b0;
+  assign G[0] = valid ? counter[27:24] : 4'b0;
+  assign B[0] = valid ? counter[24:21] : 4'b0;
+  assign A[0] = valid ?              1 : 1'b0;
 
-  assign R[1] = valid ? vdata[9:6] : 4'b0;
-  assign G[1] = valid ? hdata[9:6] : 4'b0;
-  assign B[1] = valid ? hdata[9:6] : 4'b0;
-  assign A[1] = valid ?   hdata[5] : 1'b0;
+  assign R[1] = valid ?      counter[24:21] : 4'b0;
+  assign G[1] = valid ?      counter[31:28] : 4'b0;
+  assign B[1] = valid ?      counter[27:24] : 4'b0;
+  assign A[1] = valid ? vdata[5] ^ hdata[5] : 1'b0;
 
 endmodule

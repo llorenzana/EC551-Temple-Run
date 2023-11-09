@@ -1,13 +1,16 @@
 #include "Vintegration.h"
 #include "verilated.h"
 #include <SDL2/SDL.h>
+#include <SDL_events.h>
 #include <SDL_stdinc.h>
 #include <cassert>
+#include <chrono>
 #include <cstdint>
 #include <cstdio>
 #include <format>
 #include <fstream>
 #include <iostream>
+#include <thread>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
@@ -40,7 +43,7 @@ int main(int argc, char **argv) {
   int vsync = 0;
   int idx = 0;
 
-  while (frames < 10) {
+  while (true) {
     top->CLK100MHZ = 0;
     top->eval();
 
@@ -49,9 +52,17 @@ int main(int argc, char **argv) {
 
     if (!vsync && top->VGA_VS) {
       frames++;
+      idx = 0;
+
       SDL_memcpy(surface->pixels, image, 800 * 525 * 4);
       SDL_UpdateWindowSurface(window);
-      idx = 0;
+
+      SDL_Event e;
+      if (SDL_PollEvent(&e))
+        if (e.type == SDL_QUIT)
+          break;
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
     image[idx++] = top->VGA_B << 4;
@@ -60,16 +71,6 @@ int main(int argc, char **argv) {
     image[idx++] = 255;
 
     vsync = top->VGA_VS;
-  }
-
-  // Hack to get window to stay up
-  SDL_Event e;
-  bool quit = false;
-  while (quit == false) {
-    while (SDL_PollEvent(&e)) {
-      if (e.type == SDL_QUIT)
-        quit = true;
-    }
   }
 
   delete top;
