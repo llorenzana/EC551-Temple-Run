@@ -7,7 +7,8 @@
     flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
       let pkgs = import nixpkgs { inherit system; }; in with pkgs; {
         devShell = mkShell {
-          nativeBuildInputs = [ cmake verilator clang-tools ];
+          nativeBuildInputs = [ cmake verilator clang-tools pkg-config ];
+          buildInputs = [ stb ];
         };
       });
 }
