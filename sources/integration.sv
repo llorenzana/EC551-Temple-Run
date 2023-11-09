@@ -52,7 +52,8 @@ module integration(
     .vdata(vdata),
     .hoffset(0),
     .voffset(0),
-    .addr(addr)
+    .addr(addr),
+    .valid()
   );
 
   vram vram_i0(
