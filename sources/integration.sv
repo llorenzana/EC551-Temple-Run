@@ -45,12 +45,17 @@ module integration(
   );
 
   logic [12:0] datab, dataf;
+  logic [14:0] addr;
 
-  /* verilator lint_off WIDTHEXPAND */
-  /* verilator lint_off TIMESCALEMOD */
+  transformer transformer_i(
+    .hdata(hdata),
+    .vdata(vdata),
+    .addr(addr)
+  );
+
   vram vram_i0(
     .clk(CLK100MHZ),
-    .addr(vdata[11:2] * 160 + hdata[11:2]),
+    .addr(addr),
     .data(datab)
   );
 
@@ -58,13 +63,11 @@ module integration(
 
   vram vram_i1(
     .clk(CLK100MHZ),
-    .addr(vdata[11:2] * 160 + hdata[11:2]),
+    .addr(addr),
     .data(dataf)
   );
 
   defparam vram_i1.INIT = "../../artwork/logo.txt";
-  /* verilator lint_on TIMESCALEMOD */
-  /* verilator lint_on WIDTHEXPAND */
 
   assign R[0] = valid ? datab[12:9] : 4'b0;
   assign G[0] = valid ? datab[ 8:5] : 4'b0;
