@@ -45,22 +45,31 @@ module integration(
   );
 
   logic [12:0] datab, dataf;
-  logic [14:0] addr;
-  logic  addr_valid;
+  logic [14:0] addrb, addrf;
+  logic validb, validf;
 
-  transformer transformer_i(
+  transformer transformer_i0(
     .hdata(hdata),
     .vdata(vdata),
     .hoffset(0),
     .voffset(0),
-    .addr(addr),
-    .valid(addr_valid)
+    .addr(addrb),
+    .valid(validb)
+  );
+
+  transformer transformer_i1(
+    .hdata(hdata),
+    .vdata(vdata),
+    .hoffset(0),
+    .voffset(0),
+    .addr(addrf),
+    .valid(validf)
   );
 
   vram vram_i0(
     .clk(CLK100MHZ),
-    .addr(addr),
-    .en(addr_valid),
+    .addr(addrb),
+    .en(validb),
     .data(datab)
   );
 
@@ -68,8 +77,8 @@ module integration(
 
   vram vram_i1(
     .clk(CLK100MHZ),
-    .addr(addr),
-    .en(addr_valid),
+    .addr(addrf),
+    .en(validf),
     .data(dataf)
   );
 
