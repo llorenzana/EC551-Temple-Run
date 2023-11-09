@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module compositor #(parameter DEPTH = 4) (
    input logic [DEPTH - 1:0]   R_prev,
    input logic [DEPTH - 1:0]   G_prev,
