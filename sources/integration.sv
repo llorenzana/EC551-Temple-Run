@@ -44,26 +44,36 @@ module integration(
     .A_next()
   );
 
-  logic [12:0] data;
+  logic [12:0] datab, dataf;
 
   /* verilator lint_off WIDTHEXPAND */
   /* verilator lint_off TIMESCALEMOD */
-  vram vram_i(
+  vram vram_i0(
     .clk(CLK100MHZ),
     .addr(vdata[11:2] * 160 + hdata[11:2]),
-    .data(data)
+    .data(datab)
   );
+
+  defparam vram_i0.INIT = "../../artwork/background.txt";
+
+  vram vram_i1(
+    .clk(CLK100MHZ),
+    .addr(vdata[11:2] * 160 + hdata[11:2]),
+    .data(dataf)
+  );
+
+  defparam vram_i1.INIT = "../../artwork/logo.txt";
   /* verilator lint_on TIMESCALEMOD */
   /* verilator lint_on WIDTHEXPAND */
 
-  assign R[0] = valid ? counter[31:28] : 4'b0;
-  assign G[0] = valid ? counter[27:24] : 4'b0;
-  assign B[0] = valid ? counter[24:21] : 4'b0;
-  assign A[0] = valid ?              1 : 1'b0;
+  assign R[0] = valid ? datab[12:9] : 4'b0;
+  assign G[0] = valid ? datab[ 8:5] : 4'b0;
+  assign B[0] = valid ? datab[ 4:1] : 4'b0;
+  assign A[0] = valid ? datab[   0] : 1'b0;
 
-  assign R[1] = valid ? data[12:9] : 4'b0;
-  assign G[1] = valid ? data[ 8:5] : 4'b0;
-  assign B[1] = valid ? data[ 4:1] : 4'b0;
-  assign A[1] = valid ? vdata[5] ^ hdata[5] : 1'b0;
+  assign R[1] = valid ? dataf[12:9] : 4'b0;
+  assign G[1] = valid ? dataf[ 8:5] : 4'b0;
+  assign B[1] = valid ? dataf[ 4:1] : 4'b0;
+  assign A[1] = valid ? dataf[   0] : 1'b0;
 
 endmodule
