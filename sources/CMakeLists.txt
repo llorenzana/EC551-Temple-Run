@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(verilator HINTS $ENV{VERILATOR_ROOT})
+find_package(SDL2 REQUIRED CONFIG REQUIRED COMPONENTS SDL2)
 
 include(FindPkgConfig)
 pkg_check_modules(STB REQUIRED stb)
@@ -16,4 +17,5 @@ verilate(Vcompositor SOURCES compositor.sv)
 
 add_executable(Vintegration integration.cc)
 target_include_directories(Vintegration PUBLIC ${STB_INCLUDE_DIRS})
+target_link_libraries(Vintegration PRIVATE SDL2::SDL2)
 verilate(Vintegration SOURCES integration.sv)

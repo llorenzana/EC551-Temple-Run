@@ -1,5 +1,6 @@
 #include "Vintegration.h"
 #include "verilated.h"
+#include <SDL2/SDL.h>
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -11,6 +12,36 @@
 #include "stb_image_write.h"
 
 int main(int argc, char **argv) {
+  SDL_Window *window = NULL;
+  SDL_Surface *surface = NULL;
+
+  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+  }
+
+  window =
+      SDL_CreateWindow("VGA Display", SDL_WINDOWPOS_UNDEFINED,
+                       SDL_WINDOWPOS_UNDEFINED, 800, 525, SDL_WINDOW_SHOWN);
+
+  if (window == NULL) {
+    printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+  }
+
+  surface = SDL_GetWindowSurface(window);
+
+  SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0xFF, 0xFF, 0xFF));
+  SDL_UpdateWindowSurface(window);
+
+  // Hack to get window to stay up
+  SDL_Event e;
+  bool quit = false;
+  while (quit == false) {
+    while (SDL_PollEvent(&e)) {
+      if (e.type == SDL_QUIT)
+        quit = true;
+    }
+  }
+
   VerilatedContext *contextp = new VerilatedContext;
   contextp->commandArgs(argc, argv);
   auto top = new Vintegration{contextp};
@@ -48,4 +79,7 @@ int main(int argc, char **argv) {
   delete top;
   delete contextp;
   return 0;
+
+  SDL_DestroyWindow(window);
+  SDL_Quit();
 }
