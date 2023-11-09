@@ -21,8 +21,8 @@ module integration(
     .valid(valid)
   );
 
-  assign VGA_R = hdata[9:6];
-  assign VGA_G = hdata[9:6];
-  assign VGA_B = hdata[9:6];
+  assign VGA_R = valid ? hdata[9:6] : 4'b0;
+  assign VGA_G = valid ? vdata[9:6] : 4'b0;
+  assign VGA_B = valid ? vdata[9:6] : 4'b0;
 
 endmodule
