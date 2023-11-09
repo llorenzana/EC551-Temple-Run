@@ -1,6 +1,7 @@
 #include "Vintegration.h"
 #include "verilated.h"
 #include <SDL2/SDL.h>
+#include <SDL_stdinc.h>
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -29,19 +30,6 @@ int main(int argc, char **argv) {
 
   surface = SDL_GetWindowSurface(window);
 
-  SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0xFF, 0xFF, 0xFF));
-  SDL_UpdateWindowSurface(window);
-
-  // Hack to get window to stay up
-  SDL_Event e;
-  bool quit = false;
-  while (quit == false) {
-    while (SDL_PollEvent(&e)) {
-      if (e.type == SDL_QUIT)
-        quit = true;
-    }
-  }
-
   VerilatedContext *contextp = new VerilatedContext;
   contextp->commandArgs(argc, argv);
   auto top = new Vintegration{contextp};
@@ -61,25 +49,34 @@ int main(int argc, char **argv) {
 
     if (!vsync && top->VGA_VS) {
       frames++;
-
-      assert(stbi_write_png(std::format("output{}.png", frames).c_str(), 800,
-                            525, 4, image, 800 * 4));
-
+      SDL_memcpy(surface->pixels, image, 800 * 525 * 4);
+      SDL_UpdateWindowSurface(window);
       idx = 0;
     }
 
-    image[idx++] = top->VGA_R << 4;
-    image[idx++] = top->VGA_G << 4;
     image[idx++] = top->VGA_B << 4;
+    image[idx++] = top->VGA_G << 4;
+    image[idx++] = top->VGA_R << 4;
     image[idx++] = 255;
 
     vsync = top->VGA_VS;
   }
 
+  // Hack to get window to stay up
+  SDL_Event e;
+  bool quit = false;
+  while (quit == false) {
+    while (SDL_PollEvent(&e)) {
+      if (e.type == SDL_QUIT)
+        quit = true;
+    }
+  }
+
   delete top;
   delete contextp;
-  return 0;
 
   SDL_DestroyWindow(window);
   SDL_Quit();
+
+  return 0;
 }
