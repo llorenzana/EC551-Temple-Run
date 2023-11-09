@@ -13,8 +13,21 @@ module integration(
   logic [11:0] hdata, vdata;
   logic valid;
 
+  logic signed [11:0] offset;
+
+  initial begin
+    offset = 600;
+  end
+
   always_ff @(posedge CLK100MHZ) begin
     counter <= counter + 1;
+  end
+
+  always_ff @(posedge counter[15]) begin
+    offset <= offset - 1;
+    if (offset < -600) begin
+      offset <= 600;
+    end
   end
 
   vga vga_i(
@@ -60,7 +73,7 @@ module integration(
   transformer transformer_i1(
     .hdata(hdata),
     .vdata(vdata),
-    .hoffset(0),
+    .hoffset(offset),
     .voffset(0),
     .addr(addrf),
     .valid(validf)
