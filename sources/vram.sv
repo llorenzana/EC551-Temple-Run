@@ -2,6 +2,7 @@
 
 module vram #(parameter DATA_WIDTH=13, ADDR_WIDTH=15, INIT="init.txt") (
    input logic                     clk,
+   input logic                      en,
    input logic [ADDR_WIDTH - 1:0] addr,
   output logic [DATA_WIDTH - 1:0] data
 );
@@ -13,6 +14,10 @@ module vram #(parameter DATA_WIDTH=13, ADDR_WIDTH=15, INIT="init.txt") (
   end
 
   always_ff @(posedge clk) begin
-    data <= ram[addr];
+    if (en) begin
+      data <= ram[addr];
+    end else begin
+      data <= 0;
+    end
   end
 endmodule

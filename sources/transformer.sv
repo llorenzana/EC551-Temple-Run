@@ -15,13 +15,13 @@ module transformer #(
   output logic        [AWIDTH - 1:0]    addr,
   output logic                         valid
 );
-  logic [HWIDTH - 1:0] haddr;
-  logic [VWIDTH - 1:0] vaddr;
+  logic [HWIDTH - 1 - IWIDTH:0] haddr;
+  logic [VWIDTH - 1 - IWIDTH:0] vaddr;
   always_comb begin
-    haddr = hdata + hoffset;
-    vaddr = vdata + voffset;
+    haddr = {hdata + hoffset}[HWIDTH - 1:IWIDTH];
+    vaddr = {vdata + voffset}[VWIDTH - 1:IWIDTH];
 
-    addr  = vaddr[VWIDTH - 1:IWIDTH] * HSIZE + AWIDTH'(haddr[HWIDTH - 1:IWIDTH]);
+    addr  = vaddr * HSIZE + AWIDTH'(haddr);
     valid = (vaddr < VSIZE) & (haddr < HSIZE);
   end
 endmodule
