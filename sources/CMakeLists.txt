@@ -11,3 +11,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(Vcompositor compositor.cc)
 target_include_directories(Vcompositor PUBLIC ${STB_INCLUDE_DIRS})
 verilate(Vcompositor SOURCES compositor.sv)
+
+add_executable(Vintegration integration.cc)
+verilate(Vintegration SOURCES integration.sv)
