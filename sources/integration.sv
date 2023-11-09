@@ -50,6 +50,8 @@ module integration(
   transformer transformer_i(
     .hdata(hdata),
     .vdata(vdata),
+    .hoffset(0),
+    .voffset(0),
     .addr(addr)
   );
 

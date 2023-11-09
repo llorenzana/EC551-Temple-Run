@@ -8,11 +8,17 @@ module transformer #(
              VSIZE = 480 / (2 ** IWIDTH),
             AWIDTH =                  15
 ) (
-   input logic [HWIDTH - 1:0] hdata,
-   input logic [VWIDTH - 1:0] vdata,
-  output logic [AWIDTH - 1:0]  addr
+   input logic        [HWIDTH - 1:0]   hdata,
+   input logic        [VWIDTH - 1:0]   vdata,
+   input logic signed [HWIDTH - 1:0] hoffset,
+   input logic signed [VWIDTH - 1:0] voffset,
+  output logic        [AWIDTH - 1:0]    addr
 );
+  logic [HWIDTH - 1:0] haddr;
+  logic [VWIDTH - 1:0] vaddr;
   always_comb begin
-    addr = vdata[VWIDTH - 1:IWIDTH] * HSIZE + AWIDTH'(hdata[HWIDTH - 1:IWIDTH]);
+    haddr = hdata + hoffset;
+    vaddr = vdata + voffset;
+    addr = vaddr[VWIDTH - 1:IWIDTH] * HSIZE + AWIDTH'(haddr[HWIDTH - 1:IWIDTH]);
   end
 endmodule
