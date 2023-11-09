@@ -42,6 +42,7 @@ int main(int argc, char **argv) {
   int frames = 0;
   int vsync = 0;
   int idx = 0;
+  int div = 0;
 
   while (true) {
     top->CLK100MHZ = 0;
@@ -62,13 +63,18 @@ int main(int argc, char **argv) {
         if (e.type == SDL_QUIT)
           break;
 
-      std::this_thread::sleep_for(std::chrono::milliseconds(1));
+      // std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    image[idx++] = top->VGA_B << 4;
-    image[idx++] = top->VGA_G << 4;
-    image[idx++] = top->VGA_R << 4;
-    image[idx++] = 255;
+    div++;
+
+    if (div == 4) {
+      image[idx++] = top->VGA_B << 4;
+      image[idx++] = top->VGA_G << 4;
+      image[idx++] = top->VGA_R << 4;
+      image[idx++] = 255;
+      div = 0;
+    }
 
     vsync = top->VGA_VS;
   }

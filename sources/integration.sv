@@ -23,15 +23,15 @@ module integration(
     counter <= counter + 1;
   end
 
-  always_ff @(posedge counter[15]) begin
-    offset <= offset - 1;
+  always_ff @(posedge VGA_VS) begin
+    offset <= offset - 20;
     if (offset < -600) begin
       offset <= 600;
     end
   end
 
   vga vga_i(
-    .clk(CLK100MHZ), // FIXME: should be CLK25MHZ
+    .clk(counter[1]),
     .hsync(VGA_HS),
     .vsync(VGA_VS),
     .hdata(hdata),
