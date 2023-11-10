@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module vram #(parameter DATA_WIDTH=13, ADDR_WIDTH=15, INIT="init.txt") (
+module vram #(parameter DATA_WIDTH=13, ADDR_WIDTH=15, INIT="init.mem") (
    input logic                     clk,
    input logic                      en,
    input logic [ADDR_WIDTH - 1:0] addr,

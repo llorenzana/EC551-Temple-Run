@@ -86,7 +86,7 @@ module integration(
     .data(datab)
   );
 
-  defparam vram_i0.INIT = "../../artwork/background.txt";
+  defparam vram_i0.INIT = "background.mem";
 
   vram vram_i1(
     .clk(CLK100MHZ),
@@ -95,7 +95,7 @@ module integration(
     .data(dataf)
   );
 
-  defparam vram_i1.INIT = "../../artwork/logo.txt";
+  defparam vram_i1.INIT = "logo.mem";
 
   assign R[0] = valid ? datab[12:9] : 4'b0;
   assign G[0] = valid ? datab[ 8:5] : 4'b0;
