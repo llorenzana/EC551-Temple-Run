@@ -14,11 +14,12 @@ module integration(
   logic [11:0] hdata, vdata;
   logic valid;
 
-  logic signed [11:0] countdown, offset;
+  logic signed [11:0] countdown, offset, offseth;
 
   initial begin
-    countdown =  50;
-    offset    =   0;
+    countdown =   50;
+    offset    =    0;
+    offseth   = -170;
   end
 
   always_ff @(posedge CLK100MHZ) begin
@@ -30,10 +31,13 @@ module integration(
       countdown <= countdown - 1;
     end else if (offset > -600) begin
       offset <= offset - 5;
+    end else if (offseth < 0) begin
+      offseth <= offseth + 10;
     end
     if (!CPU_RESETN) begin
-      countdown <=  50;
-         offset <=   0;
+      countdown <=    50;
+         offset <=     0;
+        offseth <=  -170;
     end
   end
 
@@ -58,15 +62,30 @@ module integration(
     .G_curr(G[1]),
     .B_curr(B[1]),
     .A_curr(A[1]),
+    .R_next(R[2]),
+    .G_next(G[2]),
+    .B_next(B[2]),
+    .A_next(A[2])
+  );
+
+  compositor compositor_i1(
+    .R_prev(R[2]),
+    .G_prev(G[2]),
+    .B_prev(B[2]),
+    .A_prev(A[2]),
+    .R_curr(R[3]),
+    .G_curr(G[3]),
+    .B_curr(B[3]),
+    .A_curr(A[3]),
     .R_next(VGA_R),
     .G_next(VGA_G),
     .B_next(VGA_B),
     .A_next()
   );
 
-  logic [12:0] datab, dataf;
-  logic [14:0] addrb, addrf;
-  logic validb, validf;
+  logic [12:0] datab, dataf, datah;
+  logic [14:0] addrb, addrf, addrh;
+  logic validb, validf, validh;
 
   transformer transformer_i0(
     .hdata(hdata),
@@ -84,6 +103,15 @@ module integration(
     .voffset(0),
     .addr(addrf),
     .valid(validf)
+  );
+
+  transformer transformer_i2(
+    .hdata(hdata),
+    .vdata(vdata),
+    .hoffset(0),
+    .voffset(offseth),
+    .addr(addrh),
+    .valid(validh)
   );
 
   vram vram_i0(
@@ -104,6 +132,15 @@ module integration(
 
   defparam vram_i1.INIT = "logo.mem";
 
+  vram vram_i2(
+    .clk(CLK100MHZ),
+    .addr(addrh),
+    .en(validh),
+    .data(datah)
+  );
+
+  defparam vram_i2.INIT = "head.mem";
+
   assign R[0] = valid ? datab[12:9] : 4'b0;
   assign G[0] = valid ? datab[ 8:5] : 4'b0;
   assign B[0] = valid ? datab[ 4:1] : 4'b0;
@@ -113,5 +150,10 @@ module integration(
   assign G[1] = valid ? dataf[ 8:5] : 4'b0;
   assign B[1] = valid ? dataf[ 4:1] : 4'b0;
   assign A[1] = valid ? dataf[   0] : 1'b0;
+
+  assign R[3] = valid ? datah[12:9] : 4'b0;
+  assign G[3] = valid ? datah[ 8:5] : 4'b0;
+  assign B[3] = valid ? datah[ 4:1] : 4'b0;
+  assign A[3] = valid ? datah[   0] : 1'b0;
 
 endmodule
