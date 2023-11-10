@@ -53,7 +53,11 @@ output wire VGA_HS,
 output wire VGA_VS,
 
 // audio
-output wire AUD_PWM
+output wire AUD_PWM,
+
+// button
+input wire BTNL,
+input wire BTNR
 );
 wire CLK25MHZ;
 
@@ -64,11 +68,14 @@ wire CLK25MHZ;
 
 integration intgration_i(
   .CLK100MHZ(CLK100MHZ),
+  .CPU_RESETN(CPU_RESETN),
   .VGA_HS(VGA_HS),
   .VGA_VS(VGA_VS),
   .VGA_R(VGA_R),
   .VGA_G(VGA_G),
-  .VGA_B(VGA_B)
+  .VGA_B(VGA_B),
+  .BTNL(BTNL),
+  .BTNR(BTNR)
 );
 
 endmodule
