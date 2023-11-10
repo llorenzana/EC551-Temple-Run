@@ -37,6 +37,8 @@ int main(int argc, char **argv) {
   contextp->commandArgs(argc, argv);
   auto top = new Vintegration{contextp};
 
+  top->CPU_RESETN = 1;
+
   uint8_t image[800 * 525 * 4];
 
   int frames = 0;

@@ -1,22 +1,24 @@
 `timescale 1ns / 1ps
 
 module integration(
-   input logic       CLK100MHZ,
-  output logic          VGA_HS,
-  output logic          VGA_VS,
-  output logic [3:0]     VGA_R,
-  output logic [3:0]     VGA_G,
-  output logic [3:0]     VGA_B
+   input logic        CLK100MHZ,
+   input logic       CPU_RESETN,
+  output logic           VGA_HS,
+  output logic           VGA_VS,
+  output logic [3:0]      VGA_R,
+  output logic [3:0]      VGA_G,
+  output logic [3:0]      VGA_B
 );
 
   logic [31:0] counter;
   logic [11:0] hdata, vdata;
   logic valid;
 
-  logic signed [11:0] offset;
+  logic signed [11:0] countdown, offset;
 
   initial begin
-    offset = 600;
+    countdown =  50;
+    offset    =   0;
   end
 
   always_ff @(posedge CLK100MHZ) begin
@@ -24,9 +26,14 @@ module integration(
   end
 
   always_ff @(posedge VGA_VS) begin
-    offset <= offset - 20;
-    if (offset < -600) begin
-      offset <= 600;
+    if (countdown > 5) begin
+      countdown <= countdown - 1;
+    end else if (offset > -600) begin
+      offset <= offset - 5;
+    end
+    if (!CPU_RESETN) begin
+      countdown <=  50;
+         offset <=   0;
     end
   end
 
