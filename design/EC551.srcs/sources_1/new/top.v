@@ -55,37 +55,20 @@ output wire VGA_VS,
 // audio
 output wire AUD_PWM
 );
-
-wire [11:0] hdata, vdata;
-wire valid;
-
 wire CLK25MHZ;
 
-pll pll_i(
-  .clk_in1(CLK100MHZ),
-  .clk_out1(CLK25MHZ)
+//music music_i(
+//  .clk(CLK25MHZ),
+//  .speaker(AUD_PWM)
+//);
+
+integration intgration_i(
+  .CLK100MHZ(CLK100MHZ),
+  .VGA_HS(VGA_HS),
+  .VGA_VS(VGA_VS),
+  .VGA_R(VGA_R),
+  .VGA_G(VGA_G),
+  .VGA_B(VGA_B)
 );
 
-music music_i(
-  .clk(CLK25MHZ),
-  .speaker(AUD_PWM)
-);
-
-vga vga_i(
-  .clk(CLK25MHZ),
-  .hsync(VGA_HS),
-  .vsync(VGA_VS),
-  .hdata(hdata),
-  .vdata(vdata),
-  .valid(valid)
-);
-
-blk_mem_gen_0 vram(
-  .addra(hdata+vdata*640),
-  .clka(CLK25MHZ),
-  .dina(12'b0),
-  .douta({VGA_R, VGA_G, VGA_B}),
-  .ena(valid),
-  .wea(1'b0)
-);
 endmodule
