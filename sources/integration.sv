@@ -3,6 +3,8 @@
 module integration(
    input logic        CLK100MHZ,
    input logic       CPU_RESETN,
+   input logic             BTNL,
+   input logic             BTNR,
   output logic           VGA_HS,
   output logic           VGA_VS,
   output logic [3:0]      VGA_R,
@@ -14,16 +16,24 @@ module integration(
   logic [11:0] hdata, vdata;
   logic valid;
 
-  logic signed [11:0] countdown, offset, offseth;
+  logic signed [11:0] countdown, offset, offseth, offsetv;
 
   initial begin
     countdown =   50;
     offset    =    0;
     offseth   = -170;
+    offsetv   =    0;
   end
 
   always_ff @(posedge CLK100MHZ) begin
     counter <= counter + 1;
+    if (BTNL) begin
+      offsetv =  100;
+    end else if (BTNR) begin
+      offsetv = -100;
+    end else begin
+      offsetv =    0;
+    end
   end
 
   always_ff @(posedge VGA_VS) begin
@@ -108,7 +118,7 @@ module integration(
   transformer transformer_i2(
     .hdata(hdata),
     .vdata(vdata),
-    .hoffset(0),
+    .hoffset(offsetv),
     .voffset(offseth),
     .addr(addrh),
     .valid(validh)

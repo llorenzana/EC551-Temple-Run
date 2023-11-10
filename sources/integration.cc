@@ -60,12 +60,30 @@ int main(int argc, char **argv) {
       SDL_memcpy(surface->pixels, image, 800 * 525 * 4);
       SDL_UpdateWindowSurface(window);
 
+      // std::this_thread::sleep_for(std::chrono::milliseconds(1));
       SDL_Event e;
-      if (SDL_PollEvent(&e))
+      if (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT)
           break;
-
-      // std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        if (e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) {
+          switch (e.key.keysym.sym) {
+          case SDLK_LEFT:
+            if (e.key.type == SDL_KEYDOWN) {
+              top->BTNL = 1;
+            } else {
+              top->BTNL = 0;
+            }
+            break;
+          case SDLK_RIGHT:
+            if (e.key.type == SDL_KEYDOWN) {
+              top->BTNR = 1;
+            } else {
+              top->BTNR = 0;
+            }
+            break;
+          }
+        }
+      }
     }
 
     div++;
