@@ -3,9 +3,9 @@
 module transformer #(
   parameter IWIDTH =                   2,
             HWIDTH =                  12,
-             HSIZE = 640 / (2 ** IWIDTH),
+             HSIZE =                 640,
             VWIDTH =                  12,
-             VSIZE = 480 / (2 ** IWIDTH),
+             VSIZE =                 480,
             AWIDTH =                  15
 ) (
    input logic        [HWIDTH - 1:0]   hdata,
@@ -21,7 +21,7 @@ module transformer #(
     haddr = {hdata + hoffset}[HWIDTH - 1:IWIDTH];
     vaddr = {vdata + voffset}[VWIDTH - 1:IWIDTH];
 
-    addr  = vaddr * HSIZE + AWIDTH'(haddr);
-    valid = (vaddr < VSIZE) & (haddr < HSIZE);
+    addr  = vaddr * HSIZE[HWIDTH - 1:IWIDTH] + AWIDTH'(haddr);
+    valid = (vaddr < VSIZE[VWIDTH - 1:IWIDTH]) & (haddr < HSIZE[HWIDTH - 1:IWIDTH]);
   end
 endmodule

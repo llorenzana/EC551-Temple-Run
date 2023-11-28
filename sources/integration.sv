@@ -20,7 +20,7 @@ module integration(
   logic signed [11:0] coinloc;
 
   initial begin
-    countdown =    0;
+    countdown =   10;
     offset    =    0;
     offseth   = -170;
     offsetv   =    0;
@@ -42,9 +42,9 @@ module integration(
     if (countdown > 5) begin
       countdown <= countdown - 1;
     end else if (offset > -600) begin
-      offset <= offset - 300;
+      offset <= offset - 30;
     end else if (offseth < 0) begin
-      offseth <= offseth + 170;
+      offseth <= offseth + 17;
     end
     if (!CPU_RESETN) begin
       countdown <=    50;
@@ -64,8 +64,8 @@ module integration(
     .valid(valid)
   );
 
-  logic [3:0] R [5:0], G [5:0], B [5:0];
-  logic                         A [5:0];
+  logic [3:0] R [4:0], G [4:0], B [4:0];
+  logic                         A [4:0];
 
   compositor compositor_i0(
     .R_prev(R[0]),
@@ -97,25 +97,9 @@ module integration(
     .A_next(A[4])
   );
 
-  compositor compositor_i2(
-    .R_prev(R[4]),
-    .G_prev(G[4]),
-    .B_prev(B[4]),
-    .A_prev(A[4]),
-    .R_curr(R[5]),
-    .G_curr(G[5]),
-    .B_curr(B[5]),
-    .A_curr(A[5]),
-    .R_next(VGA_R),
-    .G_next(VGA_G),
-    .B_next(VGA_B),
-    .A_next()
-  );
-
-
-  logic [12:0] datab, dataf, datah, datac;
-  logic [14:0] addrb, addrf, addrh, addrc;
-  logic validb, validf, validh, validc;
+  logic [12:0] datab, dataf, datah;
+  logic [14:0] addrb, addrf, addrh;
+  logic validb, validf, validh;
 
   transformer transformer_i0(
     .hdata(hdata),
@@ -144,7 +128,8 @@ module integration(
     .valid(validh)
   );
 
-  transformer transformer_i3(
+  layer #(.INIT("coin.mem")) coin(
+    .clk(CLK100MHZ),
     .hdata(hdata),
     .vdata(vdata),
     // move from
@@ -155,8 +140,14 @@ module integration(
     // .voffset(-400),
     .hoffset(-200 + coinloc),
     .voffset(-40 - 6 * coinloc),
-    .addr(addrc),
-    .valid(validc)
+    .R_prev(R[4]),
+    .G_prev(G[4]),
+    .B_prev(B[4]),
+    .A_prev(A[4]),
+    .R_next(VGA_R),
+    .G_next(VGA_G),
+    .B_next(VGA_B),
+    .A_next()
   );
 
   vram vram_i0(
@@ -186,15 +177,6 @@ module integration(
 
   defparam vram_i2.INIT = "head.mem";
 
-  vram vram_i3(
-    .clk(CLK100MHZ),
-    .addr(addrc),
-    .en(validc),
-    .data(datac)
-  );
-
-  defparam vram_i3.INIT = "coin.mem";
-
   assign R[0] = valid ? datab[12:9] : 4'b0;
   assign G[0] = valid ? datab[ 8:5] : 4'b0;
   assign B[0] = valid ? datab[ 4:1] : 4'b0;
@@ -209,10 +191,5 @@ module integration(
   assign G[3] = valid ? datah[ 8:5] : 4'b0;
   assign B[3] = valid ? datah[ 4:1] : 4'b0;
   assign A[3] = valid ? datah[   0] : 1'b0;
-
-  assign R[5] = valid ? datac[12:9] : 4'b0;
-  assign G[5] = valid ? datac[ 8:5] : 4'b0;
-  assign B[5] = valid ? datac[ 4:1] : 4'b0;
-  assign A[5] = valid ? datac[   0] : 1'b0;
 
 endmodule

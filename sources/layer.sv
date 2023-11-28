@@ -9,8 +9,8 @@ module layer #(parameter DEPTH      =                   4,
                          INIT       =          "init.mem",
                          IWIDTH     =                   2,
                          AWIDTH     =                  15,
-                         HSIZE      = 640 / (2 ** IWIDTH),
-                         VSIZE      = 480 / (2 ** IWIDTH)
+                         HSIZE      =                 640,
+                         VSIZE      =                 480
 
 ) (
    input logic                           clk,
@@ -50,7 +50,7 @@ module layer #(parameter DEPTH      =                   4,
   );
 
   logic [DATA_WIDTH - 1:0] data;
-  logic [ADDR_WIDTH - 1:0] addr;
+  logic [AWIDTH - 1:0] addr;
   logic valid;
 
   transformer #(
