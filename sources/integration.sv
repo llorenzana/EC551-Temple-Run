@@ -64,8 +64,8 @@ module integration(
     .valid(valid)
   );
 
-  logic [3:0] R [2:0], G [2:0], B [2:0];
-  logic                         A [2:0];
+  logic [3:0] R [4:0], G [4:0], B [4:0];
+  logic                         A [4:0];
 
   layer #(.INIT("background.mem")) background(
     .clk(CLK100MHZ),
@@ -115,7 +115,7 @@ module integration(
     .A_next(A[2])
   );
 
-  layer #(.INIT("coin.mem")) coin(
+  layer #(.INIT("coin.mem")) coin_left(
     .clk(CLK100MHZ),
     .hdata(hdata),
     .vdata(vdata),
@@ -131,6 +131,38 @@ module integration(
     .G_prev(G[2]),
     .B_prev(B[2]),
     .A_prev(A[2]),
+    .R_next(R[3]),
+    .G_next(G[3]),
+    .B_next(B[3]),
+    .A_next(A[3])
+  );
+
+  layer #(.INIT("coin.mem")) coin_middle(
+    .clk(CLK100MHZ),
+    .hdata(hdata),
+    .vdata(vdata),
+    .hoffset(-280),
+    .voffset(-40 - 6 * coinloc),
+    .R_prev(R[3]),
+    .G_prev(G[3]),
+    .B_prev(B[3]),
+    .A_prev(A[3]),
+    .R_next(R[4]),
+    .G_next(G[4]),
+    .B_next(B[4]),
+    .A_next(A[4])
+  );
+
+  layer #(.INIT("coin.mem")) coin_right(
+    .clk(CLK100MHZ),
+    .hdata(hdata),
+    .vdata(vdata),
+    .hoffset(-360 - coinloc),
+    .voffset(-40 - 6 * coinloc),
+    .R_prev(R[4]),
+    .G_prev(G[4]),
+    .B_prev(B[4]),
+    .A_prev(A[4]),
     .R_next(VGA_R),
     .G_next(VGA_G),
     .B_next(VGA_B),
