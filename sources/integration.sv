@@ -30,6 +30,7 @@ module integration (
   STATE state;
 
   logic [11:0] countdown, offset, offseth, offsetv;
+  logic [11:0] coffset[1:0];
   logic signed [11:0] coinloc;
   logic coinfli;
 
@@ -120,6 +121,21 @@ module integration (
       .random_number(random)
   );
 
+  spawn #(
+      .HWIDTH(12),
+      .VWIDTH(12),
+      .HSRC  (-12'd80),
+      .VSRC  (-12'd140),
+      .HDST  (-12'd120),
+      .VDST  (12'd220),
+      .STEP  (32)
+  ) spawn_coin_left (
+      .clk(VGA_VS),
+      .en(random[0]),
+      .hoffset(coffset[0]),
+      .voffset(coffset[1])
+  );
+
   logic [12:0] bus[2:0];
 
   layer #(
@@ -171,9 +187,9 @@ module integration (
       .clk    (CLK100MHZ),
       .hdata  (hdata),
       .vdata  (vdata),
-      .hoffset({-80 - coinloc, 0, 80 + coinloc}),
-      .voffset({-120 + 6 * coinloc, -120 + 6 * coinloc, -120 + 6 * coinloc}),
-      .hflip  ({coinfli, ~coinfli, ~coinfli}),
+      .hoffset({coffset[0], 0, 80 + coinloc}),
+      .voffset({coffset[1], -120 + 6 * coinloc, -120 + 6 * coinloc}),
+      .hflip  ({0, ~coinfli, ~coinfli}),
       .vflip  ({0, 0, 0}),
       .prev   (bus[2]),
       .next   ({VGA_R, VGA_G, VGA_B, 1'b0})
