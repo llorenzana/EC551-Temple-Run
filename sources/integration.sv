@@ -32,6 +32,7 @@ module integration (
   logic [11:0] countdown, offset, offseth, offsetv;
   logic [11:0] coffset[1:0][2:0];
   logic [11:0] toffset[1:0][1:0];
+  logic tactive[1:0];
   logic coinfli;
 
   initial begin
@@ -173,10 +174,10 @@ module integration (
       .STEP  (32)
   ) spawn_tree_right (
       .clk(VGA_VS),
-      .en(1'b1),
+      .en(random[9] & random[10] & random[11] & state == PLY_0 & ~tactive[1]),
       .hoffset(toffset[0][0]),
       .voffset(toffset[1][0]),
-      .active()
+      .active(tactive[0])
   );
 
   spawn #(
@@ -189,10 +190,10 @@ module integration (
       .STEP  (32)
   ) spawn_tree_left (
       .clk(VGA_VS),
-      .en(1'b1),
+      .en(random[11] & random[12] & random[13] & state == PLY_0 & ~tactive[0]),
       .hoffset(toffset[0][1]),
       .voffset(toffset[1][1]),
-      .active()
+      .active(tactive[1])
   );
 
   logic [12:0] bus[3:0];
