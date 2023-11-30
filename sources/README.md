@@ -5,6 +5,7 @@
 
 ### quickstart
 ```shell
+# forward port 6080
 # create build directory
 mkdir build && cd build
 # configure cmake project

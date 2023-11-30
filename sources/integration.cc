@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL_events.h>
 #include <SDL_stdinc.h>
+#include <SDL_surface.h>
 #include <cassert>
 #include <chrono>
 #include <cstdint>
@@ -30,13 +31,14 @@ int main(int argc, char **argv) {
 
   surface = SDL_GetWindowSurface(window);
 
+  auto render =
+      SDL_CreateRGBSurfaceWithFormat(0, 800, 525, 8, SDL_PIXELFORMAT_RGBA32);
+
   VerilatedContext *contextp = new VerilatedContext;
   contextp->commandArgs(argc, argv);
   auto top = new Vintegration{contextp};
 
   top->CPU_RESETN = 1;
-
-  uint8_t image[800 * 525 * 4];
 
   int frames = 0;
   int vsync = 0;
@@ -54,10 +56,9 @@ int main(int argc, char **argv) {
       frames++;
       idx = 0;
 
-      SDL_memcpy(surface->pixels, image, 800 * 525 * 4);
+      SDL_BlitSurface(render, NULL, surface, NULL);
       SDL_UpdateWindowSurface(window);
 
-      // std::this_thread::sleep_for(std::chrono::milliseconds(1));
       SDL_Event e;
       if (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT)
@@ -86,10 +87,10 @@ int main(int argc, char **argv) {
     div++;
 
     if (div == 4) {
-      image[idx++] = top->VGA_B << 4;
-      image[idx++] = top->VGA_G << 4;
-      image[idx++] = top->VGA_R << 4;
-      image[idx++] = 255;
+      ((uint8_t *)render->pixels)[idx++] = top->VGA_R << 4;
+      ((uint8_t *)render->pixels)[idx++] = top->VGA_G << 4;
+      ((uint8_t *)render->pixels)[idx++] = top->VGA_B << 4;
+      ((uint8_t *)render->pixels)[idx++] = 255;
       div = 0;
     }
 
