@@ -109,12 +109,6 @@ module integration (
       .clk(CLK100MHZ),
       .hdata(hdata),
       .vdata(vdata),
-      // move from
-      // .hoffset(-200),
-      // .voffset(-40),
-      // to
-      // .hoffset(-140),
-      // .voffset(-400),
       .hoffset({-200 + coinloc, -280, -360 - coinloc}),
       .voffset({-40 - 6 * coinloc, -40 - 6 * coinloc, -40 - 6 * coinloc}),
       .prev(bus[2]),
