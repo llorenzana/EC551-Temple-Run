@@ -42,7 +42,7 @@ module integration (
     if (countdown > 5) begin
       countdown <= countdown - 1;
     end else if (offset > -600) begin
-      offset <= offset - 30;
+      offset <= offset + 30;
     end else if (offseth < 0) begin
       offseth <= offseth + 17;
     end
@@ -109,8 +109,8 @@ module integration (
       .clk(CLK100MHZ),
       .hdata(hdata),
       .vdata(vdata),
-      .hoffset({-200 + coinloc, -280, -360 - coinloc}),
-      .voffset({-40 - 6 * coinloc, -40 - 6 * coinloc, -40 - 6 * coinloc}),
+      .hoffset({200 - coinloc, 280, 360 + coinloc}),
+      .voffset({40 + 6 * coinloc, 40 + 6 * coinloc, 40 + 6 * coinloc}),
       .prev(bus[2]),
       .next({VGA_R, VGA_G, VGA_B, 1'b0})
   );
