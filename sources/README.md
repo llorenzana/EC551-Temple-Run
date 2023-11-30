@@ -1,3 +1,9 @@
+### dependencies
+- cmake 
+- verilator
+- SDL2
+
+### quickstart
 ```shell
 # create build directory
 mkdir build && cd build
