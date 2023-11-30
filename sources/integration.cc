@@ -12,9 +12,6 @@
 #include <iostream>
 #include <thread>
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
-
 int main(int argc, char **argv) {
   SDL_Window *window = NULL;
   SDL_Surface *surface = NULL;
