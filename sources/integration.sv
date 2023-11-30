@@ -31,6 +31,7 @@ module integration (
 
   logic [11:0] countdown, offset, offseth, offsetv;
   logic [11:0] coffset[1:0][2:0];
+  logic [11:0] toffset[1:0][1:0];
   logic coinfli;
 
   initial begin
@@ -162,7 +163,39 @@ module integration (
       .active()
   );
 
-  logic [12:0] bus[2:0];
+  spawn #(
+      .HWIDTH(12),
+      .VWIDTH(12),
+      .HSRC  (12'd0),
+      .VSRC  (-12'd300),
+      .HDST  (12'd100),
+      .VDST  (12'd400),
+      .STEP  (32)
+  ) spawn_tree_right (
+      .clk(VGA_VS),
+      .en(1'b1),
+      .hoffset(toffset[0][0]),
+      .voffset(toffset[1][0]),
+      .active()
+  );
+
+  spawn #(
+      .HWIDTH(12),
+      .VWIDTH(12),
+      .HSRC  (12'd0),
+      .VSRC  (-12'd300),
+      .HDST  (-12'd100),
+      .VDST  (12'd400),
+      .STEP  (32)
+  ) spawn_tree_left (
+      .clk(VGA_VS),
+      .en(1'b1),
+      .hoffset(toffset[0][1]),
+      .voffset(toffset[1][1]),
+      .active()
+  );
+
+  logic [12:0] bus[3:0];
 
   layer #(
       .INIT("background.mem")
@@ -193,6 +226,21 @@ module integration (
   );
 
   layer #(
+      .INIT("tree.mem"),
+      .REPLICAS(2)
+  ) tree (
+      .clk(CLK100MHZ),
+      .hdata(hdata),
+      .vdata(vdata),
+      .hoffset(toffset[0]),
+      .voffset(toffset[1]),
+      .hflip({0, 1}),
+      .vflip({0, 0}),
+      .prev(bus[1]),
+      .next(bus[2])
+  );
+
+  layer #(
       .INIT("head.mem")
   ) head (
       .clk(CLK100MHZ),
@@ -202,8 +250,8 @@ module integration (
       .voffset({offseth}),
       .hflip({0}),
       .vflip({0}),
-      .prev(bus[1]),
-      .next(bus[2])
+      .prev(bus[2]),
+      .next(bus[3])
   );
 
   layer #(
@@ -217,7 +265,7 @@ module integration (
       .voffset(coffset[1]),
       .hflip  ({coinfli, coinfli, coinfli}),
       .vflip  ({0, 0, 0}),
-      .prev   (bus[2]),
+      .prev   (bus[3]),
       .next   ({VGA_R, VGA_G, VGA_B, 1'b0})
   );
 
