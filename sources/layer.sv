@@ -1,12 +1,10 @@
 `timescale 1ns / 1ps
 
 module layer #(
-    parameter DEPTH      = 4,
-              HWIDTH     = 12,
+    parameter HWIDTH     = 12,
               VWIDTH     = 12,
               DATA_WIDTH = 13,
               SIZE       = 19200,
-              ADDR_WIDTH = $clog2(SIZE),
               INIT       = "init.mem",
               IWIDTH     = 2,
               AWIDTH     = 15,

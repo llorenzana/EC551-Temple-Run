@@ -14,7 +14,6 @@ module integration (
 
   logic [31:0] counter;
   logic [11:0] hdata, vdata;
-  logic valid;
 
   logic signed [11:0] countdown, offset, offseth, offsetv;
   logic signed [11:0] coinloc;
@@ -30,11 +29,11 @@ module integration (
   always_ff @(posedge CLK100MHZ) begin
     counter <= counter + 1;
     if (BTNL) begin
-      offsetv = -100;
+      offsetv <= -100;
     end else if (BTNR) begin
-      offsetv = 100;
+      offsetv <= 100;
     end else begin
-      offsetv = 0;
+      offsetv <= 0;
     end
   end
 
@@ -64,7 +63,7 @@ module integration (
       .vsync(VGA_VS),
       .hdata(hdata),
       .vdata(vdata),
-      .valid(valid)
+      .valid()
   );
 
   logic [12:0] bus[2:0];
