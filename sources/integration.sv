@@ -123,8 +123,8 @@ module integration (
       .vdata(vdata),
       .hoffset({-80 - coinloc, 0, 80 + coinloc}),
       .voffset({-120 + 6 * coinloc, -120 + 6 * coinloc, -120 + 6 * coinloc}),
-      .hflip({      1,       0, coinfli}),
-      .vflip({coinfli, coinfli,       1}),
+      .hflip({coinfli, coinfli, coinfli}),
+      .vflip({      0,       0,       0}),
       .prev(bus[2]),
       .next({VGA_R, VGA_G, VGA_B, 1'b0})
   );
