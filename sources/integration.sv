@@ -32,7 +32,8 @@ module integration (
   logic [11:0] countdown, offset, offseth, offsetv;
   logic [11:0] coffset[1:0][2:0];
   logic [11:0] toffset[1:0][1:0];
-  logic tactive[1:0];
+  logic [11:0] roffset[1:0][1:0];
+  logic [3:0] aactive;
   logic coinfli;
 
   initial begin
@@ -126,7 +127,7 @@ module integration (
       .STEP  (32)
   ) spawn_coin_left (
       .clk(VGA_VS),
-      .en(random[0] & random[1] & random[2] & state == PLY_0),
+      .en(random[0] & random[1] & random[2] & (state == PLY_0)),
       .hoffset(coffset[0][0]),
       .voffset(coffset[1][0]),
       .active()
@@ -142,7 +143,7 @@ module integration (
       .STEP  (32)
   ) spawn_coin_middle (
       .clk(VGA_VS),
-      .en(random[3] & random[4] & random[5] & state == PLY_0),
+      .en(random[3] & random[4] & random[5] & (state == PLY_0)),
       .hoffset(coffset[0][1]),
       .voffset(coffset[1][1]),
       .active()
@@ -158,7 +159,7 @@ module integration (
       .STEP  (32)
   ) spawn_coin_right (
       .clk(VGA_VS),
-      .en(random[6] & random[7] & random[8] & state == PLY_0),
+      .en(random[6] & random[7] & random[8] & (state == PLY_0)),
       .hoffset(coffset[0][2]),
       .voffset(coffset[1][2]),
       .active()
@@ -174,10 +175,10 @@ module integration (
       .STEP  (32)
   ) spawn_tree_right (
       .clk(VGA_VS),
-      .en((random % 10 == 0) & state == PLY_0 & ~tactive[1]),
+      .en((random % 10 == 0) & (state == PLY_0) & (aactive == '0)),
       .hoffset(toffset[0][0]),
       .voffset(toffset[1][0]),
-      .active(tactive[0])
+      .active(aactive[0])
   );
 
   spawn #(
@@ -190,13 +191,45 @@ module integration (
       .STEP  (32)
   ) spawn_tree_left (
       .clk(VGA_VS),
-      .en((random % 10 == 1) & state == PLY_0 & ~tactive[0]),
+      .en((random % 10 == 1) & (state == PLY_0) & (aactive == '0)),
       .hoffset(toffset[0][1]),
       .voffset(toffset[1][1]),
-      .active(tactive[1])
+      .active(aactive[1])
   );
 
-  logic [12:0] bus[3:0];
+  spawn #(
+      .HWIDTH(12),
+      .VWIDTH(12),
+      .HSRC  (12'd0),
+      .VSRC  (-12'd300),
+      .HDST  (-12'd100),
+      .VDST  (12'd350),
+      .STEP  (32)
+  ) spawn_rock_right(
+      .clk(VGA_VS),
+      .en((random % 10 == 2) & (state == PLY_0) & (aactive == '0)),
+      .hoffset(roffset[0][0]),
+      .voffset(roffset[1][0]),
+      .active(aactive[2])
+  );
+
+  spawn #(
+      .HWIDTH(12),
+      .VWIDTH(12),
+      .HSRC  (12'd0),
+      .VSRC  (-12'd300),
+      .HDST  (12'd100),
+      .VDST  (12'd350),
+      .STEP  (32)
+  ) spawn_rock_left (
+      .clk(VGA_VS),
+      .en((random % 10 == 3) & (state == PLY_0) & (aactive == '0)),
+      .hoffset(roffset[0][1]),
+      .voffset(roffset[1][1]),
+      .active(aactive[3])
+  );
+
+  logic [12:0] bus[4:0];
 
   layer #(
       .INIT("background.mem")
@@ -242,6 +275,21 @@ module integration (
   );
 
   layer #(
+      .INIT("rock.mem"),
+      .REPLICAS(2)
+  ) rock (
+      .clk(CLK100MHZ),
+      .hdata(hdata),
+      .vdata(vdata),
+      .hoffset(roffset[0]),
+      .voffset(roffset[1]),
+      .hflip({0, 1}),
+      .vflip({0, 0}),
+      .prev(bus[2]),
+      .next(bus[3])
+  );
+
+  layer #(
       .INIT("head.mem")
   ) head (
       .clk(CLK100MHZ),
@@ -251,8 +299,8 @@ module integration (
       .voffset({offseth}),
       .hflip({0}),
       .vflip({0}),
-      .prev(bus[2]),
-      .next(bus[3])
+      .prev(bus[3]),
+      .next(bus[4])
   );
 
   layer #(
@@ -266,7 +314,7 @@ module integration (
       .voffset(coffset[1]),
       .hflip  ({coinfli, coinfli, coinfli}),
       .vflip  ({0, 0, 0}),
-      .prev   (bus[3]),
+      .prev   (bus[4]),
       .next   ({VGA_R, VGA_G, VGA_B, 1'b0})
   );
 
