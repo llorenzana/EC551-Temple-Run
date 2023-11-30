@@ -1,21 +1,21 @@
 `timescale 1ns / 1ps
 
 module transformer #(
-    parameter HWIDTH,
-              VWIDTH,
-              AWIDTH,
-              IWIDTH,
-              HSIZE,
-              VSIZE
+    parameter integer                    HWIDTH,
+              integer                    VWIDTH,
+              integer                    AWIDTH,
+              integer                    IWIDTH,
+              logic signed [HWIDTH -1:0] HSIZE,
+              logic signed [VWIDTH -1:0] VSIZE
 ) (
-    input  logic [HWIDTH - 1:0] hdata,
-    input  logic [VWIDTH - 1:0] vdata,
-    input  logic [HWIDTH - 1:0] hoffset,
-    input  logic [VWIDTH - 1:0] voffset,
-    input  logic                hflip,
-    input  logic                vflip,
-    output logic [AWIDTH - 1:0] addr,
-    output logic                valid
+    input  logic signed [HWIDTH - 1:0] hdata,
+    input  logic signed [VWIDTH - 1:0] vdata,
+    input  logic signed [HWIDTH - 1:0] hoffset,
+    input  logic signed [VWIDTH - 1:0] voffset,
+    input  logic                       hflip,
+    input  logic                       vflip,
+    output logic        [AWIDTH - 1:0] addr,
+    output logic                       valid
 );
 
   logic [HWIDTH - 1:0] haddr;
