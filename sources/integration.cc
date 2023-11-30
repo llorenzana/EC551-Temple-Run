@@ -10,7 +10,6 @@
 #include <chrono>
 #include <cstdint>
 #include <cstdio>
-#include <format>
 #include <fstream>
 #include <iostream>
 #include <thread>
@@ -62,7 +61,7 @@ int main(int argc, char **argv) {
       SDL_Event e;
       while (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT)
-          break;
+          return 0;
         if (e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) {
           switch (e.key.keysym.sym) {
           case SDLK_r:
@@ -72,14 +71,14 @@ int main(int argc, char **argv) {
               top->CPU_RESETN = 1;
             }
             break;
-          case SDLK_LEFT:
+          case SDLK_a:
             if (e.key.type == SDL_KEYDOWN) {
               top->BTNL = 1;
             } else {
               top->BTNL = 0;
             }
             break;
-          case SDLK_RIGHT:
+          case SDLK_d:
             if (e.key.type == SDL_KEYDOWN) {
               top->BTNR = 1;
             } else {
