@@ -219,7 +219,7 @@ module integration (
       .vdata  (vdata),
       .hoffset({coffset[0][0], coffset[1][0], coffset[2][0]}),
       .voffset({coffset[0][1], coffset[1][1], coffset[2][1]}),
-      .hflip  ({0, ~coinfli, ~coinfli}),
+      .hflip  ({coinfli, coinfli, coinfli}),
       .vflip  ({0, 0, 0}),
       .prev   (bus[2]),
       .next   ({VGA_R, VGA_G, VGA_B, 1'b0})
