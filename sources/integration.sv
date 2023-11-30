@@ -174,7 +174,7 @@ module integration (
       .STEP  (32)
   ) spawn_tree_right (
       .clk(VGA_VS),
-      .en(random[9] & random[10] & random[11] & state == PLY_0 & ~tactive[1]),
+      .en((random % 10 == 0) & state == PLY_0 & ~tactive[1]),
       .hoffset(toffset[0][0]),
       .voffset(toffset[1][0]),
       .active(tactive[0])
@@ -190,7 +190,7 @@ module integration (
       .STEP  (32)
   ) spawn_tree_left (
       .clk(VGA_VS),
-      .en(random[11] & random[12] & random[13] & state == PLY_0 & ~tactive[0]),
+      .en((random % 10 == 1) & state == PLY_0 & ~tactive[0]),
       .hoffset(toffset[0][1]),
       .voffset(toffset[1][1]),
       .active(tactive[1])
