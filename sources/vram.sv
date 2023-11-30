@@ -1,13 +1,13 @@
 `timescale 1ns / 1ps
 
 module vram #(
-    parameter   WIDTH,
-    parameter   DEPTH,
-    parameter    INIT,
+    parameter  WIDTH,
+    parameter  DEPTH,
+    parameter  INIT,
     localparam AWIDTH = $clog2(DEPTH)
 ) (
-    input  logic                    clk,
-    input  logic                    en,
+    input  logic                clk,
+    input  logic                en,
     input  logic [AWIDTH - 1:0] addr,
     output logic [ WIDTH - 1:0] data
 );
