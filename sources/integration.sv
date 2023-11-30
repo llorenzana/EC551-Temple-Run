@@ -12,24 +12,30 @@ module integration (
     output logic [3:0] VGA_B
 );
 
+  typedef enum {
+    RESET,
+    PRE_0,
+    PRE_1,
+    PRE_2,
+    PRE_3,
+    PLY_0
+  } STATE;
+
   logic [31:0] counter;
   logic [11:0] hdata, vdata;
 
-  logic signed [11:0] countdown, offset, offseth, offsetv;
+  STATE state;
+
+  logic [11:0] countdown, offset, offseth, offsetv;
   logic signed [11:0] coinloc;
   logic coinfli;
 
   initial begin
-    countdown =   10;
-    offset    =    0;
-    offseth   =  180;
-    offsetv   =    0;
-    coinloc   =  -50;
-    coinfli   =    0;
+    state = RESET;
   end
 
-  always_ff @(posedge CLK100MHZ) begin
-    counter <= counter + 1;
+  always_ff @(posedge VGA_VS) begin
+
     if (BTNL) begin
       offsetv <= -100;
     end else if (BTNR) begin
@@ -37,28 +43,63 @@ module integration (
     end else begin
       offsetv <= 0;
     end
+
+    case (state)
+      RESET: begin
+        countdown <= 5;
+        offset    <= 0;
+        offseth   <= 180;
+        offsetv   <= 0;
+        coinloc   <= -50;
+        coinfli   <= 0;
+        state     <= PRE_0;
+      end
+      PRE_0: begin
+        // count down
+        if (countdown > 0) begin
+          countdown <= countdown - 1;
+        end else begin
+          state <= PRE_1;
+        end
+      end
+      PRE_1: begin
+        // logo fade-out
+        if (offset < 640) begin
+          offset <= offset + 30;
+        end else begin
+          state <= PRE_2;
+        end
+      end
+      PRE_2: begin
+        // player fade-in
+        if (offseth > 50) begin
+          offseth <= offseth - 20;
+        end else begin
+          state <= PLY_0;
+        end
+      end
+      PLY_0: begin
+        // normal game play
+        if (coinloc < 0) begin
+          coinloc <= 0;
+        end else begin
+          coinloc <= coinloc + 1;
+          coinfli <= ~coinfli;
+        end
+      end
+      default: begin
+        state <= RESET;
+      end
+    endcase
+
+    if (!CPU_RESETN) begin
+      state <= RESET;
+    end
+
   end
 
-  always_ff @(posedge VGA_VS) begin
-    if (countdown > 5) begin
-      countdown <= countdown - 1;
-    end else if (offset < 640) begin
-      offset <= offset + 30;
-    end else if (offseth > 50) begin
-      offseth <= offseth - 17;
-    end else if (coinloc < 0) begin
-      coinloc <= 0;
-    end else begin
-      coinloc <= coinloc + 1;
-      coinfli <= ~coinfli;
-    end
-    if (!CPU_RESETN) begin
-      countdown <= 10;
-      offset    <= 0;
-      offseth   <= 180;
-      coinloc   <= -50;
-      coinfli   <=   0;
-    end
+  always_ff @(posedge CLK100MHZ) begin
+    counter <= counter + 1;
   end
 
   vga vga_i (
@@ -118,15 +159,15 @@ module integration (
       .INIT("coin.mem"),
       .REPLICAS(3)
   ) coin (
-      .clk(CLK100MHZ),
-      .hdata(hdata),
-      .vdata(vdata),
+      .clk    (CLK100MHZ),
+      .hdata  (hdata),
+      .vdata  (vdata),
       .hoffset({-80 - coinloc, 0, 80 + coinloc}),
       .voffset({-120 + 6 * coinloc, -120 + 6 * coinloc, -120 + 6 * coinloc}),
-      .hflip({coinfli, coinfli, coinfli}),
-      .vflip({      0,       0,       0}),
-      .prev(bus[2]),
-      .next({VGA_R, VGA_G, VGA_B, 1'b0})
+      .hflip  ({coinfli, coinfli, coinfli}),
+      .vflip  ({0, 0, 0}),
+      .prev   (bus[2]),
+      .next   ({VGA_R, VGA_G, VGA_B, 1'b0})
   );
 
 endmodule
