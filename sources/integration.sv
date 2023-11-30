@@ -30,8 +30,7 @@ module integration (
   STATE state;
 
   logic [11:0] countdown, offset, offseth, offsetv;
-  logic [11:0] coffset[1:0];
-  logic signed [11:0] coinloc;
+  logic [11:0] coffset[1:0][2:0];
   logic coinfli;
 
   initial begin
@@ -54,7 +53,6 @@ module integration (
         offset    <= 0;
         offseth   <= 180;
         offsetv   <= 0;
-        coinloc   <= -50;
         coinfli   <= 0;
         state     <= PRE_0;
       end
@@ -84,12 +82,7 @@ module integration (
       end
       PLY_0: begin
         // normal game play
-        if (coinloc < 0) begin
-          coinloc <= 0;
-        end else begin
-          coinloc <= coinloc + 1;
-          coinfli <= random[0];
-        end
+        coinfli <= random[0];
       end
       default: begin
         state <= RESET;
@@ -131,9 +124,42 @@ module integration (
       .STEP  (32)
   ) spawn_coin_left (
       .clk(VGA_VS),
-      .en(random[0] & random[1] & random[2]),
-      .hoffset(coffset[0]),
-      .voffset(coffset[1])
+      .en(random[0] & random[1] & random[2] & state == PLY_0),
+      .hoffset(coffset[0][0]),
+      .voffset(coffset[1][0]),
+      .active()
+  );
+
+  spawn #(
+      .HWIDTH(12),
+      .VWIDTH(12),
+      .HSRC  (12'd0),
+      .VSRC  (-12'd140),
+      .HDST  (12'd0),
+      .VDST  (12'd220),
+      .STEP  (32)
+  ) spawn_coin_middle (
+      .clk(VGA_VS),
+      .en(random[3] & random[4] & random[5] & state == PLY_0),
+      .hoffset(coffset[0][1]),
+      .voffset(coffset[1][1]),
+      .active()
+  );
+
+  spawn #(
+      .HWIDTH(12),
+      .VWIDTH(12),
+      .HSRC  (12'd80),
+      .VSRC  (-12'd140),
+      .HDST  (12'd120),
+      .VDST  (12'd220),
+      .STEP  (32)
+  ) spawn_coin_right (
+      .clk(VGA_VS),
+      .en(random[6] & random[7] & random[8] & state == PLY_0),
+      .hoffset(coffset[0][2]),
+      .voffset(coffset[1][2]),
+      .active()
   );
 
   logic [12:0] bus[2:0];
@@ -187,9 +213,9 @@ module integration (
       .clk    (CLK100MHZ),
       .hdata  (hdata),
       .vdata  (vdata),
-      .hoffset({coffset[0], 0, 80 + coinloc}),
-      .voffset({coffset[1], -120 + 6 * coinloc, -120 + 6 * coinloc}),
-      .hflip  ({0, ~coinfli, ~coinfli}),
+      .hoffset(coffset[0]),
+      .voffset(coffset[1]),
+      .hflip  ({coinfli, coinfli, coinfli}),
       .vflip  ({0, 0, 0}),
       .prev   (bus[2]),
       .next   ({VGA_R, VGA_G, VGA_B, 1'b0})

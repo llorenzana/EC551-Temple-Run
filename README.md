@@ -1,11 +1,16 @@
-# EC551-Temple-Run
-Temple Run Project for EC551
+# EC551 Final Project - Temple Run
+### Team Evil Demon Monkeys
+### Julia Hua, Lea Lorenzana-Garcia, Cole Wentzel, Juncheng Cao
 
-[Overview](#Overview)
-
-[Presentation](#Presentation)
-
+## Table of Contents
+[Overview](#Overview)  
+[Presentation](#Presentation)  
+[Video](#Video)
 
 ## Overview 
+
+
+## Video
+
 
 ## Presentation

@@ -12,7 +12,8 @@ module spawn #(
     input  logic                       clk,
     input  logic                       en,
     output logic signed [HWIDTH - 1:0] hoffset,
-    output logic signed [VWIDTH - 1:0] voffset
+    output logic signed [VWIDTH - 1:0] voffset,
+    output logic                       active
 );
 
   typedef enum {
@@ -26,6 +27,10 @@ module spawn #(
 
   initial begin
     state = RESET;
+  end
+
+  always_comb begin
+    active = (state == INITA) || (state == SPAWN);
   end
 
   always_ff @(posedge clk) begin

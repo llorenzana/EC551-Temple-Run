@@ -1,16 +1,16 @@
 `timescale 1ns / 1ps
 
 module layer #(
-    parameter HWIDTH     = 12,
-              VWIDTH     = 12,
-              DATA_WIDTH = 13,
-              SIZE       = 19200,
-              INIT       = "init.mem",
-              IWIDTH     = 2,
-              AWIDTH     = 15,
-              HSIZE      = 640,
-              VSIZE      = 480,
-              REPLICAS   = 1
+    parameter integer                    HWIDTH     = 12,
+              integer                    VWIDTH     = 12,
+              integer                    DATA_WIDTH = 13,
+              integer                    SIZE       = 19200,
+              integer                    IWIDTH     = 2,
+              integer                    AWIDTH     = 15,
+              logic signed [HWIDTH -1:0] HSIZE      = 640,
+              logic signed [VWIDTH -1:0] VSIZE      = 480,
+              integer                    REPLICAS   = 1,
+              string                     INIT
 
 ) (
     input  logic                    clk,
