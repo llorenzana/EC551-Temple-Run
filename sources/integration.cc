@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 
   window =
       SDL_CreateWindow("VGA Display", SDL_WINDOWPOS_UNDEFINED,
-                       SDL_WINDOWPOS_UNDEFINED, 800, 525, SDL_WINDOW_SHOWN);
+                       SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
 
   if (window == NULL) {
     printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -40,7 +40,6 @@ int main(int argc, char **argv) {
 
   top->CPU_RESETN = 1;
 
-  int frames = 0;
   int vsync = 0;
   int idx = 0;
   int div = 0;
@@ -53,7 +52,6 @@ int main(int argc, char **argv) {
     top->eval();
 
     if (!vsync && top->VGA_VS) {
-      frames++;
       idx = 0;
 
       SDL_BlitSurface(render, NULL, surface, NULL);
