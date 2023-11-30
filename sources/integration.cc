@@ -2,6 +2,7 @@
 #include "verilated.h"
 #include <SDL2/SDL.h>
 #include <SDL_events.h>
+#include <SDL_rect.h>
 #include <SDL_stdinc.h>
 #include <SDL_surface.h>
 #include <cassert>
@@ -53,8 +54,8 @@ int main(int argc, char **argv) {
 
     if (!vsync && top->VGA_VS) {
       idx = 0;
-
-      SDL_BlitSurface(render, NULL, surface, NULL);
+      auto begin = SDL_Rect{.x = 0, .y = 33, .w = 640, .h = 480};
+      SDL_BlitSurface(render, &begin, surface, NULL);
       SDL_UpdateWindowSurface(window);
 
       SDL_Event e;
