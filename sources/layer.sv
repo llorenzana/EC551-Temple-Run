@@ -23,18 +23,18 @@ module layer #(
     output logic [DATA_WIDTH - 1:0] next
 );
 
-  logic [DATA_WIDTH - 1:0] data;
+  logic [DATA_WIDTH - 1:0] data[1];
 
   compositor #(
       .WIDTH(DATA_WIDTH)
   ) compositor (
       .prev(prev),
-      .curr(data),
+      .curr(data[0]),
       .next(next)
   );
 
-  logic [AWIDTH - 1:0] addr;
-  logic valid;
+  logic [AWIDTH - 1:0] addr[1];
+  logic valid[1];
 
   transformer #(
       .IWIDTH(IWIDTH),
@@ -48,14 +48,15 @@ module layer #(
       .vdata(vdata),
       .hoffset(hoffset),
       .voffset(voffset),
-      .addr(addr),
-      .valid(valid)
+      .addr(addr[0]),
+      .valid(valid[0])
   );
 
   vram #(
       .WIDTH(DATA_WIDTH),
       .DEPTH(SIZE),
-      .INIT (INIT)
+      .INIT (INIT),
+      .PORTS(1)
   ) vram (
       .clk (clk),
       .addr(addr),
