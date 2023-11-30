@@ -131,7 +131,7 @@ module integration (
       .STEP  (32)
   ) spawn_coin_left (
       .clk(VGA_VS),
-      .en(random[0]),
+      .en(random[0] & random[1] & random[2]),
       .hoffset(coffset[0]),
       .voffset(coffset[1])
   );
