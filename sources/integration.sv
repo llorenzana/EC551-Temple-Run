@@ -76,6 +76,8 @@ module integration (
       .vdata(vdata),
       .hoffset({0}),
       .voffset({0}),
+      .hflip({0}),
+      .vflip({0}),
       .prev(13'b0),
       .next(bus[0])
   );
@@ -88,6 +90,8 @@ module integration (
       .vdata(vdata),
       .hoffset({0}),
       .voffset({offset}),
+      .hflip({0}),
+      .vflip({0}),
       .prev(bus[0]),
       .next(bus[1])
   );
@@ -100,6 +104,8 @@ module integration (
       .vdata(vdata),
       .hoffset({offsetv}),
       .voffset({offseth}),
+      .hflip({0}),
+      .vflip({0}),
       .prev(bus[1]),
       .next(bus[2])
   );
@@ -111,8 +117,10 @@ module integration (
       .clk(CLK100MHZ),
       .hdata(hdata),
       .vdata(vdata),
-      .hoffset({200 - coinloc, 280, 360 + coinloc}),
-      .voffset({40 + 6 * coinloc, 40 + 6 * coinloc, 40 + 6 * coinloc}),
+      .hoffset({-80 - coinloc, 0, 80 + coinloc}),
+      .voffset({-120 + 6 * coinloc, -120 + 6 * coinloc, -120 + 6 * coinloc}),
+      .hflip({0, 0, 0}),
+      .vflip({0, 0, 0}),
       .prev(bus[2]),
       .next({VGA_R, VGA_G, VGA_B, 1'b0})
   );

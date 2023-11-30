@@ -18,6 +18,8 @@ module layer #(
     input  logic [    VWIDTH - 1:0] vdata,
     input  logic [    HWIDTH - 1:0] hoffset[REPLICAS],
     input  logic [    VWIDTH - 1:0] voffset[REPLICAS],
+    input  logic                    hflip  [REPLICAS],
+    input  logic                    vflip  [REPLICAS],
     input  logic [DATA_WIDTH - 1:0] prev,
     output logic [DATA_WIDTH - 1:0] next
 );
@@ -55,6 +57,8 @@ module layer #(
           .vdata(vdata),
           .hoffset(hoffset[i]),
           .voffset(voffset[i]),
+          .hflip(hflip[i]),
+          .vflip(vflip[i]),
           .addr(addr[i]),
           .valid(valid[i])
       );

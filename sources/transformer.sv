@@ -12,6 +12,8 @@ module transformer #(
     input  logic [VWIDTH - 1:0] vdata,
     input  logic [HWIDTH - 1:0] hoffset,
     input  logic [VWIDTH - 1:0] voffset,
+    input  logic                hflip,
+    input  logic                vflip,
     output logic [AWIDTH - 1:0] addr,
     output logic                valid
 );
@@ -20,8 +22,8 @@ module transformer #(
   logic [VWIDTH - 1:0] vaddr;
 
   always_comb begin
-    haddr = hdata - hoffset;
-    vaddr = vdata - voffset;
+    haddr = (hflip ? HSIZE - hdata : hdata) - hoffset;
+    vaddr = (vflip ? VSIZE - vdata : vdata) - voffset;
 
     addr  = AWIDTH'(vaddr[VWIDTH-1:IWIDTH] * HSIZE[HWIDTH-1:IWIDTH]) + AWIDTH'(haddr[HWIDTH-1:IWIDTH]);
     valid = (vaddr < VSIZE) & (haddr < HSIZE);
