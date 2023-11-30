@@ -23,6 +23,9 @@ module integration (
 
   logic [31:0] counter;
   logic [11:0] hdata, vdata;
+  /* verilator lint_off UNUSEDSIGNAL */
+  logic [19:0] random;
+  /* verilator lint_on UNUSEDSIGNAL */
 
   STATE state;
 
@@ -84,7 +87,7 @@ module integration (
           coinloc <= 0;
         end else begin
           coinloc <= coinloc + 1;
-          coinfli <= ~coinfli;
+          coinfli <= random[0];
         end
       end
       default: begin
@@ -109,6 +112,12 @@ module integration (
       .hdata(hdata),
       .vdata(vdata),
       .valid()
+  );
+
+  random_generator rng (
+      .clk(CLK100MHZ),
+      .rst(~CPU_RESETN),
+      .random_number(random)
   );
 
   logic [12:0] bus[2:0];
@@ -164,7 +173,7 @@ module integration (
       .vdata  (vdata),
       .hoffset({-80 - coinloc, 0, 80 + coinloc}),
       .voffset({-120 + 6 * coinloc, -120 + 6 * coinloc, -120 + 6 * coinloc}),
-      .hflip  ({coinfli, coinfli, coinfli}),
+      .hflip  ({coinfli, ~coinfli, ~coinfli}),
       .vflip  ({0, 0, 0}),
       .prev   (bus[2]),
       .next   ({VGA_R, VGA_G, VGA_B, 1'b0})

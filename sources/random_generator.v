@@ -5,7 +5,9 @@
 
 module random_generator(
     input clk,
+    /* verilator lint_off UNUSEDSIGNAL */
     input rst,
+    /* verilator lint_on UNUSEDSIGNAL */
     output reg [19:0] random_number
     );
    
@@ -13,16 +15,16 @@ module random_generator(
     reg[4:0] count;
     wire feedback = rnd[19] ^ rnd[16];
     initial begin
-        rnd <= 20'b1;
-        count <= 0;
+        rnd = 20'b1;
+        count = 0;
     end
    
     always@(posedge clk) begin
         if (count == 20) begin
             count <= 0;
-            random_number = rnd;
+            random_number <= rnd;
         end else begin
-            rnd <= {rnd[19:0], feedback};
+            rnd <= {rnd[18:0], feedback};
             count <= count + 1;
         end  
     end
