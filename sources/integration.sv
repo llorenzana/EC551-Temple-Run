@@ -17,6 +17,7 @@ module integration (
 
   logic signed [11:0] countdown, offset, offseth, offsetv;
   logic signed [11:0] coinloc;
+  logic coinfli;
 
   initial begin
     countdown =   10;
@@ -24,6 +25,7 @@ module integration (
     offseth   =  180;
     offsetv   =    0;
     coinloc   =  -50;
+    coinfli   =    0;
   end
 
   always_ff @(posedge CLK100MHZ) begin
@@ -48,12 +50,14 @@ module integration (
       coinloc <= 0;
     end else begin
       coinloc <= coinloc + 1;
+      coinfli <= ~coinfli;
     end
     if (!CPU_RESETN) begin
       countdown <= 10;
       offset    <= 0;
       offseth   <= 180;
       coinloc   <= -50;
+      coinfli   <=   0;
     end
   end
 
@@ -119,8 +123,8 @@ module integration (
       .vdata(vdata),
       .hoffset({-80 - coinloc, 0, 80 + coinloc}),
       .voffset({-120 + 6 * coinloc, -120 + 6 * coinloc, -120 + 6 * coinloc}),
-      .hflip({0, 0, 0}),
-      .vflip({0, 0, 0}),
+      .hflip({      1,       0, coinfli}),
+      .vflip({coinfli, coinfli,       1}),
       .prev(bus[2]),
       .next({VGA_R, VGA_G, VGA_B, 1'b0})
   );
