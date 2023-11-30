@@ -64,14 +64,14 @@ module integration(
     .valid(valid)
   );
 
-  logic [12:0] bus[5:0];
+  logic [12:0] bus[2:0];
 
   layer #(.INIT("background.mem")) background(
     .clk(CLK100MHZ),
     .hdata(hdata),
     .vdata(vdata),
-    .hoffset(0),
-    .voffset(0),
+    .hoffset({0}),
+    .voffset({0}),
     .prev(13'b0),
     .next(bus[0])
   );
@@ -80,8 +80,8 @@ module integration(
     .clk(CLK100MHZ),
     .hdata(hdata),
     .vdata(vdata),
-    .hoffset(0),
-    .voffset(offset),
+    .hoffset({0}),
+    .voffset({offset}),
     .prev(bus[0]),
     .next(bus[1])
   );
@@ -90,13 +90,13 @@ module integration(
     .clk(CLK100MHZ),
     .hdata(hdata),
     .vdata(vdata),
-    .hoffset(offsetv),
-    .voffset(offseth),
+    .hoffset({offsetv}),
+    .voffset({offseth}),
     .prev(bus[1]),
     .next(bus[2])
   );
 
-  layer #(.INIT("coin.mem")) coin_left(
+  layer #(.INIT("coin.mem"), .REPLICAS(3)) coin(
     .clk(CLK100MHZ),
     .hdata(hdata),
     .vdata(vdata),
@@ -106,29 +106,9 @@ module integration(
     // to
     // .hoffset(-140),
     // .voffset(-400),
-    .hoffset(-200 + coinloc),
-    .voffset(-40 - 6 * coinloc),
+    .hoffset({-200 + coinloc, -280, -360 - coinloc}),
+    .voffset({-40 - 6 * coinloc, -40 - 6 * coinloc, -40 - 6 * coinloc}),
     .prev(bus[2]),
-    .next(bus[3])
-  );
-
-  layer #(.INIT("coin.mem")) coin_middle(
-    .clk(CLK100MHZ),
-    .hdata(hdata),
-    .vdata(vdata),
-    .hoffset(-280),
-    .voffset(-40 - 6 * coinloc),
-    .prev(bus[3]),
-    .next(bus[4])
-  );
-
-  layer #(.INIT("coin.mem")) coin_right(
-    .clk(CLK100MHZ),
-    .hdata(hdata),
-    .vdata(vdata),
-    .hoffset(-360 - coinloc),
-    .voffset(-40 - 6 * coinloc),
-    .prev(bus[4]),
     .next({VGA_R, VGA_G, VGA_B, 1'b0})
   );
 

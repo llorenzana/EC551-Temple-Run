@@ -11,52 +11,63 @@ module layer #(
               IWIDTH     = 2,
               AWIDTH     = 15,
               HSIZE      = 640,
-              VSIZE      = 480
+              VSIZE      = 480,
+              REPLICAS   = 1
 
 ) (
     input  logic                    clk,
     input  logic [    HWIDTH - 1:0] hdata,
     input  logic [    VWIDTH - 1:0] vdata,
-    input  logic [    HWIDTH - 1:0] hoffset,
-    input  logic [    VWIDTH - 1:0] voffset,
+    input  logic [    HWIDTH - 1:0] hoffset[REPLICAS],
+    input  logic [    VWIDTH - 1:0] voffset[REPLICAS],
     input  logic [DATA_WIDTH - 1:0] prev,
     output logic [DATA_WIDTH - 1:0] next
 );
 
-  logic [DATA_WIDTH - 1:0] data[1];
+  logic [DATA_WIDTH - 1:0] data[REPLICAS];
+  logic [DATA_WIDTH - 1:0] dbus[REPLICAS+1]  /*verilator split_var*/;
+  logic [AWIDTH - 1:0] addr[REPLICAS];
+  logic valid[REPLICAS];
 
-  compositor #(
-      .WIDTH(DATA_WIDTH)
-  ) compositor (
-      .prev(prev),
-      .curr(data[0]),
-      .next(next)
-  );
+  always_comb begin
+    dbus[0] = prev;
+    next = dbus[REPLICAS];
+  end
 
-  logic [AWIDTH - 1:0] addr[1];
-  logic valid[1];
+  genvar i;
 
-  transformer #(
-      .IWIDTH(IWIDTH),
-      .HWIDTH(HWIDTH),
-      .HSIZE (HSIZE),
-      .VWIDTH(VWIDTH),
-      .VSIZE (VSIZE),
-      .AWIDTH(AWIDTH)
-  ) transformer (
-      .hdata(hdata),
-      .vdata(vdata),
-      .hoffset(hoffset),
-      .voffset(voffset),
-      .addr(addr[0]),
-      .valid(valid[0])
-  );
+  generate
+    for (i = 0; i < REPLICAS; i = i + 1) begin
+      compositor #(
+          .WIDTH(DATA_WIDTH)
+      ) compositor (
+          .prev(dbus[i]),
+          .curr(data[i]),
+          .next(dbus[i+1])
+      );
+      transformer #(
+          .IWIDTH(IWIDTH),
+          .HWIDTH(HWIDTH),
+          .HSIZE (HSIZE),
+          .VWIDTH(VWIDTH),
+          .VSIZE (VSIZE),
+          .AWIDTH(AWIDTH)
+      ) transformer (
+          .hdata(hdata),
+          .vdata(vdata),
+          .hoffset(hoffset[i]),
+          .voffset(voffset[i]),
+          .addr(addr[i]),
+          .valid(valid[i])
+      );
+    end
+  endgenerate
 
   vram #(
       .WIDTH(DATA_WIDTH),
       .DEPTH(SIZE),
       .INIT (INIT),
-      .PORTS(1)
+      .PORTS(REPLICAS)
   ) vram (
       .clk (clk),
       .addr(addr),
