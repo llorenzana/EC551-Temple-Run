@@ -31,16 +31,14 @@ module layer #(parameter DEPTH      =                   4,
   output logic                 A_next
 );
 
-  logic [DEPTH - 1:0] R, G, B;
-  logic A;
+  logic [DATA_WIDTH - 1:0] data;
 
   compositor #(.WIDTH(DATA_WIDTH)) compositor(
     .prev({R_prev, G_prev, B_prev, A_prev}),
-    .curr({R     , G     , B     , A     }),
+    .curr(data),
     .next({R_next, G_next, B_next, A_next})
   );
 
-  logic [DATA_WIDTH - 1:0] data;
   logic [AWIDTH - 1:0] addr;
   logic valid;
 
@@ -71,9 +69,4 @@ module layer #(parameter DEPTH      =                   4,
     .data(data)
   );
 
-  // FIXME: not parameterized
-  assign R = valid ? data[12:9] : 4'b0;
-  assign G = valid ? data[ 8:5] : 4'b0;
-  assign B = valid ? data[ 4:1] : 4'b0;
-  assign A = valid ? data[   0] : 1'b0;
 endmodule
