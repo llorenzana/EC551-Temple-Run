@@ -2,6 +2,7 @@
 #include "verilated.h"
 #include <SDL2/SDL.h>
 #include <SDL_events.h>
+#include <SDL_keycode.h>
 #include <SDL_rect.h>
 #include <SDL_stdinc.h>
 #include <SDL_surface.h>
@@ -64,6 +65,13 @@ int main(int argc, char **argv) {
           break;
         if (e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) {
           switch (e.key.keysym.sym) {
+          case SDLK_r:
+            if (e.key.type == SDL_KEYDOWN) {
+              top->CPU_RESETN = 0;
+            } else {
+              top->CPU_RESETN = 1;
+            }
+            break;
           case SDLK_LEFT:
             if (e.key.type == SDL_KEYDOWN) {
               top->BTNL = 1;
