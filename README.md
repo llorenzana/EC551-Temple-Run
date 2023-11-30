@@ -2,12 +2,15 @@
 ### Team Evil Demon Monkeys
 ### Julia Hua, Lea Lorenzana-Garcia, Cole Wentzel, Juncheng Cao
 
-## Outline
-[Overview](#Overview) 
-
-[Presentation](#Presentation)
-
+## Table of Contents
+[Overview](#Overview)  
+[Presentation](#Presentation)  
+[Video](#Video)
 
 ## Overview 
+
+
+## Video
+
 
 ## Presentation
