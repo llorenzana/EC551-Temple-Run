@@ -10,7 +10,7 @@ module layer #(
               logic signed [HWIDTH -1:0] HSIZE      = 640,
               logic signed [VWIDTH -1:0] VSIZE      = 480,
               integer                    REPLICAS   = 1,
-    parameter                            INIT
+              string                     INIT
 
 ) (
     input  logic                    clk,
