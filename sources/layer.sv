@@ -34,19 +34,10 @@ module layer #(parameter DEPTH      =                   4,
   logic [DEPTH - 1:0] R, G, B;
   logic A;
 
-  compositor #(.DEPTH(DEPTH)) compositor(
-    .R_prev(R_prev),
-    .G_prev(G_prev),
-    .B_prev(B_prev),
-    .A_prev(A_prev),
-    .R_curr(R),
-    .G_curr(G),
-    .B_curr(B),
-    .A_curr(A),
-    .R_next(R_next),
-    .G_next(G_next),
-    .B_next(B_next),
-    .A_next(A_next)
+  compositor #(.WIDTH(DATA_WIDTH)) compositor(
+    .prev({R_prev, G_prev, B_prev, A_prev}),
+    .curr({R     , G     , B     , A     }),
+    .next({R_next, G_next, B_next, A_next})
   );
 
   logic [DATA_WIDTH - 1:0] data;
