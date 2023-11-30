@@ -1,0 +1,10 @@
+{
+  "name": "EC551-Temple-Run",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/desktop-lite:1": { },
+    "ghcr.io/devcontainers/features/nix:1": {
+      "extraNixConfig": "experimental-features = nix-command flakes"
+    }
+  }
+}
