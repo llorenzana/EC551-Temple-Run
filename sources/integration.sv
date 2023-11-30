@@ -31,7 +31,6 @@ module integration (
 
   logic [11:0] countdown, offset, offseth, offsetv;
   logic [11:0] coffset[2:0][1:0];
-  logic signed [11:0] coinloc;
   logic coinfli;
 
   initial begin
@@ -54,7 +53,6 @@ module integration (
         offset    <= 0;
         offseth   <= 180;
         offsetv   <= 0;
-        coinloc   <= -50;
         coinfli   <= 0;
         state     <= PRE_0;
       end
@@ -84,12 +82,7 @@ module integration (
       end
       PLY_0: begin
         // normal game play
-        if (coinloc < 0) begin
-          coinloc <= 0;
-        end else begin
-          coinloc <= coinloc + 1;
-          coinfli <= random[0];
-        end
+        coinfli <= random[0];
       end
       default: begin
         state <= RESET;
