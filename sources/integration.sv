@@ -30,7 +30,7 @@ module integration (
   STATE state;
 
   logic [11:0] countdown, offset, offseth, offsetv;
-  logic [11:0] coffset[2:0][1:0];
+  logic [11:0] coffset[1:0][2:0];
   logic coinfli;
 
   initial begin
@@ -126,7 +126,7 @@ module integration (
       .clk(VGA_VS),
       .en(random[0] & random[1] & random[2] & state == PLY_0),
       .hoffset(coffset[0][0]),
-      .voffset(coffset[0][1])
+      .voffset(coffset[1][0])
   );
 
   spawn #(
@@ -140,7 +140,7 @@ module integration (
   ) spawn_coin_middle (
       .clk(VGA_VS),
       .en(random[3] & random[4] & random[5] & state == PLY_0),
-      .hoffset(coffset[1][0]),
+      .hoffset(coffset[0][1]),
       .voffset(coffset[1][1])
   );
 
@@ -155,8 +155,8 @@ module integration (
   ) spawn_coin_right (
       .clk(VGA_VS),
       .en(random[6] & random[7] & random[8] & state == PLY_0),
-      .hoffset(coffset[2][0]),
-      .voffset(coffset[2][1])
+      .hoffset(coffset[0][2]),
+      .voffset(coffset[1][2])
   );
 
   logic [12:0] bus[2:0];
@@ -210,8 +210,8 @@ module integration (
       .clk    (CLK100MHZ),
       .hdata  (hdata),
       .vdata  (vdata),
-      .hoffset({coffset[0][0], coffset[1][0], coffset[2][0]}),
-      .voffset({coffset[0][1], coffset[1][1], coffset[2][1]}),
+      .hoffset(coffset[0]),
+      .voffset(coffset[1]),
       .hflip  ({coinfli, coinfli, coinfli}),
       .vflip  ({0, 0, 0}),
       .prev   (bus[2]),
