@@ -22,17 +22,17 @@ module integration (
   initial begin
     countdown =   10;
     offset    =    0;
-    offseth   = -170;
+    offseth   =  180;
     offsetv   =    0;
-    coinloc   =    0;
+    coinloc   =  -50;
   end
 
   always_ff @(posedge CLK100MHZ) begin
     counter <= counter + 1;
     if (BTNL) begin
-      offsetv = 100;
-    end else if (BTNR) begin
       offsetv = -100;
+    end else if (BTNR) begin
+      offsetv = 100;
     end else begin
       offsetv = 0;
     end
@@ -41,18 +41,21 @@ module integration (
   always_ff @(posedge VGA_VS) begin
     if (countdown > 5) begin
       countdown <= countdown - 1;
-    end else if (offset > -600) begin
+    end else if (offset < 640) begin
       offset <= offset + 30;
-    end else if (offseth < 0) begin
-      offseth <= offseth + 17;
+    end else if (offseth > 50) begin
+      offseth <= offseth - 17;
+    end else if (coinloc < 0) begin
+      coinloc <= 0;
+    end else begin
+      coinloc <= coinloc + 1;
     end
     if (!CPU_RESETN) begin
-      countdown <= 50;
+      countdown <= 10;
       offset    <= 0;
-      offseth   <= -170;
+      offseth   <= 180;
+      coinloc   <= -50;
     end
-
-    coinloc <= coinloc + 1;
   end
 
   vga vga_i (
