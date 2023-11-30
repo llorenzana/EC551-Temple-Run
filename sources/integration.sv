@@ -126,7 +126,8 @@ module integration (
       .clk(VGA_VS),
       .en(random[0] & random[1] & random[2] & state == PLY_0),
       .hoffset(coffset[0][0]),
-      .voffset(coffset[1][0])
+      .voffset(coffset[1][0]),
+      .active()
   );
 
   spawn #(
@@ -141,7 +142,8 @@ module integration (
       .clk(VGA_VS),
       .en(random[3] & random[4] & random[5] & state == PLY_0),
       .hoffset(coffset[0][1]),
-      .voffset(coffset[1][1])
+      .voffset(coffset[1][1]),
+      .active()
   );
 
   spawn #(
@@ -156,7 +158,8 @@ module integration (
       .clk(VGA_VS),
       .en(random[6] & random[7] & random[8] & state == PLY_0),
       .hoffset(coffset[0][2]),
-      .voffset(coffset[1][2])
+      .voffset(coffset[1][2]),
+      .active()
   );
 
   logic [12:0] bus[2:0];
