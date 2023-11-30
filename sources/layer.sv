@@ -70,9 +70,8 @@ module layer #(parameter DEPTH      =                   4,
   );
 
   vram #(
-    .DATA_WIDTH(DATA_WIDTH),
-    .SIZE(SIZE),
-    .ADDR_WIDTH(ADDR_WIDTH),
+    .WIDTH(DATA_WIDTH),
+    .DEPTH(SIZE),
     .INIT(INIT)
   ) vram(
     .clk(clk),
