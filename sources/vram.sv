@@ -19,18 +19,14 @@ module vram #(
     $readmemb(INIT, ram);
   end
 
-  genvar i;
-
-  generate
-    for (i = 0; i < PORTS; i = i + 1) begin
-      always_ff @(posedge clk) begin
-        if (en[i]) begin
-          data[i] <= ram[addr[i]];
-        end else begin
-          data[i] <= 0;
-        end
+  always_ff @(posedge clk) begin
+    for (integer i = 0; i < PORTS; i = i + 1) begin
+      if (en[i]) begin
+        data[i] <= ram[addr[i]];
+      end else begin
+        data[i] <= 0;
       end
     end
-  endgenerate
+  end
 
 endmodule
