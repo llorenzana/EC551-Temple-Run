@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
       SDL_UpdateWindowSurface(window);
 
       SDL_Event e;
-      if (SDL_PollEvent(&e)) {
+      while (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT)
           break;
         if (e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) {
