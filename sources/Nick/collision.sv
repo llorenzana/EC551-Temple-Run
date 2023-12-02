@@ -16,10 +16,12 @@ module collision #(
     input logic signed [HWIDTH - 1:0] obst_hoffset,
     input logic signed [VWIDTH - 1:0] obst_voffset,
     input logic [LWIDTH - 1:0] obst_lane [OBST_LANE],
-    output logic [COUNT_WIDTH - 1:0] count
+    output logic [COUNT_WIDTH - 1:0] count,
+    output logic despawn
 );
     initial begin
         count = 0;
+        despawn = 0;
     end
 
     genvar i;
@@ -31,7 +33,10 @@ module collision #(
                 (obst_voffset - VWIDTH'(POS_MISMATCH)) <= (player_voffset + VWIDTH'(POS_OFFSET)) && 
                 (obst_voffset - VWIDTH'(POS_MISMATCH)) >= (player_voffset - VWIDTH'(POS_OFFSET))) begin
                 count <= count + 1;
+                despawn <= 1;
                 //$display("HERE!! %d %d", obst_voffset, player_voffset);
+            end else begin
+                despawn <= 0;
             end
         end
       end

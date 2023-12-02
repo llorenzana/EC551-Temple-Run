@@ -124,6 +124,8 @@ module integration (
       .random_number(random)
   );
 
+  logic despawn_coin[2:0];
+
   spawn #(
       .HWIDTH(12),
       .VWIDTH(12),
@@ -135,6 +137,7 @@ module integration (
   ) spawn_coin_left (
       .clk(VGA_VS),
       .en(random[0] & random[1] & random[2] & (state == PLY_0)),
+      .despawn(despawn_coin[0]),
       .hoffset(coffset[0][0]),
       .voffset(coffset[1][0]),
       .active()
@@ -151,6 +154,7 @@ module integration (
   ) spawn_coin_middle (
       .clk(VGA_VS),
       .en(random[3] & random[4] & random[5] & (state == PLY_0)),
+      .despawn(despawn_coin[1]),
       .hoffset(coffset[0][1]),
       .voffset(coffset[1][1]),
       .active()
@@ -167,6 +171,7 @@ module integration (
   ) spawn_coin_right (
       .clk(VGA_VS),
       .en(random[6] & random[7] & random[8] & (state == PLY_0)),
+      .despawn(despawn_coin[2]),
       .hoffset(coffset[0][2]),
       .voffset(coffset[1][2]),
       .active()
@@ -183,6 +188,7 @@ module integration (
   ) spawn_tree_right (
       .clk(VGA_VS),
       .en((random % 10 == 0) & (state == PLY_0) & (aactive == '0)),
+      .despawn(0),
       .hoffset(toffset[0][0]),
       .voffset(toffset[1][0]),
       .active(aactive[0])
@@ -199,6 +205,7 @@ module integration (
   ) spawn_tree_left (
       .clk(VGA_VS),
       .en((random % 10 == 1) & (state == PLY_0) & (aactive == '0)),
+      .despawn(0),
       .hoffset(toffset[0][1]),
       .voffset(toffset[1][1]),
       .active(aactive[1])
@@ -215,6 +222,7 @@ module integration (
   ) spawn_rock_right(
       .clk(VGA_VS),
       .en((random % 10 == 2) & (state == PLY_0) & (aactive == '0)),
+      .despawn(0),
       .hoffset(roffset[0][0]),
       .voffset(roffset[1][0]),
       .active(aactive[2])
@@ -231,6 +239,7 @@ module integration (
   ) spawn_rock_left (
       .clk(VGA_VS),
       .en((random % 10 == 3) & (state == PLY_0) & (aactive == '0)),
+      .despawn(0),
       .hoffset(roffset[0][1]),
       .voffset(roffset[1][1]),
       .active(aactive[3])
@@ -326,9 +335,9 @@ module integration (
   );
 
 
-    logic [31:0] points[2:0];
+    logic [31:0] coin_collision[2:0];
     logic [32:0] score;
-    assign score = (state == PLY_0) ? points[0] + points[1] + points[2] : 0;
+    assign score = (state == PLY_0) ? coin_collision[0] + coin_collision[1] + coin_collision[2] : 0;
     
     initial begin
         score = 0;
@@ -336,7 +345,7 @@ module integration (
     always@(score) begin
         $display("Score: %d", score);
     end
-   
+ 
 	collision #(
         .POS_MISMATCH(70)
     )detect_left_coin_collision (
@@ -347,7 +356,8 @@ module integration (
         .obst_hoffset(coffset[0][0]),
         .obst_voffset(coffset[1][0]),
         .obst_lane({0}),
-        .count(points[0])
+        .count(coin_collision[0]),
+        .despawn(despawn_coin[0])
     );
   
 	collision #(
@@ -360,7 +370,8 @@ module integration (
         .obst_hoffset(coffset[0][1]),
         .obst_voffset(coffset[1][1]),
         .obst_lane({1}),
-        .count(points[1])
+        .count(coin_collision[1]),
+        .despawn(despawn_coin[1])
     );
 	collision #(
         .POS_MISMATCH(70)
@@ -372,7 +383,8 @@ module integration (
         .obst_hoffset(coffset[0][2]),
         .obst_voffset(coffset[1][2]),
         .obst_lane({2}),
-        .count(points[2])
+        .count(coin_collision[2]),
+        .despawn(despawn_coin[2])
     );
 
     logic [2:0] fatal_collision[3:0];
@@ -401,7 +413,8 @@ module integration (
         .obst_hoffset(toffset[0][0]),
         .obst_voffset(toffset[1][0]),
         .obst_lane({1,2}),
-        .count(fatal_collision[0])
+        .count(fatal_collision[0]),
+        .despawn()
     );
 	collision #(
         .OBST_LANE(2),
@@ -414,7 +427,8 @@ module integration (
         .obst_hoffset(toffset[0][1]),
         .obst_voffset(toffset[1][1]),
         .obst_lane({0,1}),
-        .count(fatal_collision[1])
+        .count(fatal_collision[1]),
+        .despawn()
     );
 
 	collision #(
@@ -427,7 +441,8 @@ module integration (
         .obst_hoffset(roffset[0][1]),
         .obst_voffset(roffset[1][1]),
         .obst_lane({2}),
-        .count(fatal_collision[2])
+        .count(fatal_collision[2]),
+        .despawn()
     );
 
 	collision #(
@@ -440,6 +455,7 @@ module integration (
         .obst_hoffset(roffset[0][0]),
         .obst_voffset(roffset[1][0]),
         .obst_lane({0}),
-        .count(fatal_collision[3])
+        .count(fatal_collision[3]),
+        .despawn()
     );
 endmodule

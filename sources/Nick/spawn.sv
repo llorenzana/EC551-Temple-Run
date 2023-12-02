@@ -11,6 +11,7 @@ module spawn #(
 ) (
     input  logic                       clk,
     input  logic                       en,
+    input  logic                       despawn,
     output logic signed [HWIDTH - 1:0] hoffset,
     output logic signed [VWIDTH - 1:0] voffset,
     output logic                       active
@@ -52,7 +53,7 @@ module spawn #(
         hoffset <= hoffset + ((HDST - HSRC) >>> $clog2(STEP));
         voffset <= voffset + ((VDST - VSRC) >>> $clog2(STEP));
         step <= step + 1;
-        if (step > STEP) begin
+        if (step > STEP || despawn == 1) begin
           state <= RESET;
         end
       end
