@@ -34,7 +34,11 @@ module integration (
   logic [11:0] toffset[1:0][1:0];
   logic [11:0] roffset[1:0][1:0];
   logic [3:0] aactive;
+  logic [1:0] player_lane;
+ 
+  /* verilator lint_off UNUSEDSIGNAL */
   logic coinfli;
+  /* verilator lint_off UNUSEDSIGNAL */
 
   initial begin
     state = RESET;
@@ -44,10 +48,13 @@ module integration (
 
     if (BTNL) begin
       offsetv <= -100;
+      player_lane <= 0;
     end else if (BTNR) begin
       offsetv <= 100;
+      player_lane <= 2;
     end else begin
       offsetv <= 0;
+      player_lane <= 1;
     end
 
     case (state)
@@ -317,5 +324,46 @@ module integration (
       .prev   (bus[4]),
       .next   ({VGA_R, VGA_G, VGA_B, 1'b0})
   );
+
+
+    logic [31:0] points[2:0];
+    logic [32:0] score;
+    assign score = points[0] + points[1] + points[2];
+    always@(score) begin
+        $display("Score: %d", score);
+    end
+   
+	collision detect_left_coin_collision (
+        .clk(VGA_VS),
+        .player_hoffset(offsetv),
+        .player_voffset(offseth),
+        .player_lane(player_lane),
+        .obst_hoffset(coffset[0][0]),
+        .obst_voffset(coffset[1][0]),
+        .obst_lane(0),
+        .count(points[0])
+    );
+  
+	collision detect_middle_coin_collision (
+        .clk(VGA_VS),
+        .player_hoffset(offsetv),
+        .player_voffset(offseth),
+        .player_lane(player_lane),
+        .obst_hoffset(coffset[0][1]),
+        .obst_voffset(coffset[1][1]),
+        .obst_lane(1),
+        .count(points[1])
+    );
+	collision detect_right_coin_collision (
+        .clk(VGA_VS),
+        .player_hoffset(offsetv),
+        .player_voffset(offseth),
+        .player_lane(player_lane),
+        .obst_hoffset(coffset[0][2]),
+        .obst_voffset(coffset[1][2]),
+        .obst_lane(2),
+        .count(points[2])
+    );
+
 
 endmodule
