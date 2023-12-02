@@ -329,6 +329,7 @@ module integration (
     logic [31:0] points[2:0];
     logic [32:0] score;
     assign score = points[0] + points[1] + points[2];
+
     always@(score) begin
         $display("Score: %d", score);
     end
@@ -340,7 +341,7 @@ module integration (
         .player_lane(player_lane),
         .obst_hoffset(coffset[0][0]),
         .obst_voffset(coffset[1][0]),
-        .obst_lane(0),
+        .obst_lane({0}),
         .count(points[0])
     );
   
@@ -351,7 +352,7 @@ module integration (
         .player_lane(player_lane),
         .obst_hoffset(coffset[0][1]),
         .obst_voffset(coffset[1][1]),
-        .obst_lane(1),
+        .obst_lane({1}),
         .count(points[1])
     );
 	collision detect_right_coin_collision (
@@ -361,9 +362,71 @@ module integration (
         .player_lane(player_lane),
         .obst_hoffset(coffset[0][2]),
         .obst_voffset(coffset[1][2]),
-        .obst_lane(2),
+        .obst_lane({2}),
         .count(points[2])
     );
 
+    logic [2:0] fatal_collision[3:0];
+    logic isDead;
+    initial begin
+        isDead = 0;
+    end 
+    
+    always@(fatal_collision) begin
+        isDead <= 1;
+        $display("GAME OVER!");
+    end
 
+	collision #(
+        .OBST_LANE(2),
+        .COUNT_WIDTH(3)
+    ) detect_right_tree_collision (
+        .clk(VGA_VS),
+        .player_hoffset(offsetv),
+        .player_voffset(offseth),
+        .player_lane(player_lane),
+        .obst_hoffset(toffset[0][0]),
+        .obst_voffset(toffset[1][0]),
+        .obst_lane({1,2}),
+        .count(fatal_collision[0])
+    );
+	collision #(
+        .OBST_LANE(2),
+        .COUNT_WIDTH(3)
+    ) detect_left_tree_collision (
+        .clk(VGA_VS),
+        .player_hoffset(offsetv),
+        .player_voffset(offseth),
+        .player_lane(player_lane),
+        .obst_hoffset(toffset[0][1]),
+        .obst_voffset(toffset[1][1]),
+        .obst_lane({0,1}),
+        .count(fatal_collision[1])
+    );
+
+	collision #(
+        .COUNT_WIDTH(3)
+    ) detect_right_rock_collision (
+        .clk(VGA_VS),
+        .player_hoffset(offsetv),
+        .player_voffset(offseth),
+        .player_lane(player_lane),
+        .obst_hoffset(roffset[0][1]),
+        .obst_voffset(roffset[1][1]),
+        .obst_lane({2}),
+        .count(fatal_collision[2])
+    );
+
+	collision #(
+        .COUNT_WIDTH(3)
+    ) detect_left_rock_collision (
+        .clk(VGA_VS),
+        .player_hoffset(offsetv),
+        .player_voffset(offseth),
+        .player_lane(player_lane),
+        .obst_hoffset(roffset[0][0]),
+        .obst_voffset(roffset[1][0]),
+        .obst_lane({0}),
+        .count(fatal_collision[3])
+    );
 endmodule
