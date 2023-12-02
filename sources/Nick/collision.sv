@@ -5,7 +5,9 @@ module collision #(
               integer VWIDTH = 12, // vertical
               integer LWIDTH = 2, // lane
               integer OBST_LANE = 1, // # of lanes that obstacle takes up
-              integer COUNT_WIDTH = 32
+              integer COUNT_WIDTH = 32,
+              integer POS_MISMATCH = 0,
+              integer POS_OFFSET = 5
 ) (
     input logic clk,
     input logic signed [HWIDTH - 1:0] player_hoffset,
@@ -25,9 +27,11 @@ module collision #(
     generate
       for (i = 0; i < OBST_LANE; i = i + 1) begin
         always_ff @(posedge clk) begin
-            if (obst_lane[i] == player_lane && obst_voffset <= (player_voffset + 5) && obst_voffset >= (player_voffset - 5)) begin
+            if (obst_lane[i] == player_lane && 
+                (obst_voffset - VWIDTH'(POS_MISMATCH)) <= (player_voffset + VWIDTH'(POS_OFFSET)) && 
+                (obst_voffset - VWIDTH'(POS_MISMATCH)) >= (player_voffset - VWIDTH'(POS_OFFSET))) begin
                 count <= count + 1;
-            //$display("HERE!! %d %d", obst_voffset, player_voffset);
+                //$display("HERE!! %d %d", obst_voffset, player_voffset);
             end
         end
       end

@@ -337,7 +337,9 @@ module integration (
         $display("Score: %d", score);
     end
    
-	collision detect_left_coin_collision (
+	collision #(
+        .POS_MISMATCH(70)
+    )detect_left_coin_collision (
         .clk(VGA_VS),
         .player_hoffset(offsetv),
         .player_voffset(offseth),
@@ -348,7 +350,9 @@ module integration (
         .count(points[0])
     );
   
-	collision detect_middle_coin_collision (
+	collision #(
+        .POS_MISMATCH(70)
+    ) detect_middle_coin_collision (
         .clk(VGA_VS),
         .player_hoffset(offsetv),
         .player_voffset(offseth),
@@ -358,7 +362,9 @@ module integration (
         .obst_lane({1}),
         .count(points[1])
     );
-	collision detect_right_coin_collision (
+	collision #(
+        .POS_MISMATCH(70)
+    ) detect_right_coin_collision (
         .clk(VGA_VS),
         .player_hoffset(offsetv),
         .player_voffset(offseth),
