@@ -10,6 +10,8 @@ module collision #(
               integer POS_OFFSET = 5
 ) (
     input logic clk,
+    input logic rst_count,
+    input logic ignore_obstacle,
     input logic signed [HWIDTH - 1:0] player_hoffset,
     input logic signed [VWIDTH - 1:0] player_voffset,
     input logic [LWIDTH - 1: 0] player_lane,
@@ -17,11 +19,11 @@ module collision #(
     input logic signed [VWIDTH - 1:0] obst_voffset,
     input logic [LWIDTH - 1:0] obst_lane [OBST_LANE],
     output logic [COUNT_WIDTH - 1:0] count,
-    output logic despawn
+    output logic [OBST_LANE-1:0] has_collision
 );
     initial begin
         count = 0;
-        despawn = 0;
+        has_collision = 0;
     end
 
     genvar i;
@@ -29,14 +31,18 @@ module collision #(
     generate
       for (i = 0; i < OBST_LANE; i = i + 1) begin
         always_ff @(posedge clk) begin
-            if (obst_lane[i] == player_lane && 
+            if (rst_count == 1) begin
+                count <= 0;
+            end else if (ignore_obstacle == 1) begin
+                count <= count;
+                has_collision[i] <= 0;
+            end else if (obst_lane[i] == player_lane && 
                 (obst_voffset - VWIDTH'(POS_MISMATCH)) <= (player_voffset + VWIDTH'(POS_OFFSET)) && 
                 (obst_voffset - VWIDTH'(POS_MISMATCH)) >= (player_voffset - VWIDTH'(POS_OFFSET))) begin
                 count <= count + 1;
-                despawn <= 1;
-                //$display("HERE!! %d %d", obst_voffset, player_voffset);
+                has_collision[i] <= 1;
             end else begin
-                despawn <= 0;
+                has_collision[i] <= 0;
             end
         end
       end

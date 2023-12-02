@@ -37,6 +37,7 @@ module integration (
   logic [11:0] roffset[1:0][1:0];
   logic [3:0] aactive;
   logic [1:0] player_lane;
+  logic is_jumping;
  
   /* verilator lint_off UNUSEDSIGNAL */
   logic coinfli;
@@ -68,6 +69,7 @@ module integration (
         coinfli   <= 0;
         state     <= PRE_0;
         dead_offset <= 700; // outside of screen
+        $display("Reset!");
       end
       PRE_0: begin
         // count down
@@ -97,6 +99,7 @@ module integration (
         // normal game play
         coinfli <= random[0];
         offseth <= next_offseth;
+
         if (isDead == 1) begin
             state <= GAME_OVER;
         end
@@ -116,7 +119,13 @@ module integration (
 
   end
 
-  jump player_jump(.clk(VGA_VS), .up(BTNU), .pos(offseth), .next_pos(next_offseth)); 
+  jump player_jump(
+    .clk(VGA_VS), 
+    .up(BTNU), 
+    .pos(offseth), 
+    .next_pos(next_offseth),
+    .is_jumping(is_jumping)
+  ); 
 
   always_ff @(posedge CLK100MHZ) begin
     counter <= counter + 1;
@@ -374,9 +383,11 @@ module integration (
     end
  
 	collision #(
-        .POS_MISMATCH(70)
+        .POS_MISMATCH(100),
     )detect_left_coin_collision (
         .clk(VGA_VS),
+        .rst_count(state != PLY_0),
+        .ignore_obstacle(is_jumping),
         .player_hoffset(offsetv),
         .player_voffset(offseth),
         .player_lane(player_lane),
@@ -384,13 +395,15 @@ module integration (
         .obst_voffset(coffset[1][0]),
         .obst_lane({0}),
         .count(coin_collision[0]),
-        .despawn(despawn_coin[0])
+        .has_collision(despawn_coin[0])
     );
   
 	collision #(
-        .POS_MISMATCH(70)
+        .POS_MISMATCH(100)
     ) detect_middle_coin_collision (
         .clk(VGA_VS),
+        .rst_count(state != PLY_0),
+        .ignore_obstacle(is_jumping),
         .player_hoffset(offsetv),
         .player_voffset(offseth),
         .player_lane(player_lane),
@@ -398,12 +411,14 @@ module integration (
         .obst_voffset(coffset[1][1]),
         .obst_lane({1}),
         .count(coin_collision[1]),
-        .despawn(despawn_coin[1])
+        .has_collision(despawn_coin[1])
     );
 	collision #(
-        .POS_MISMATCH(70)
+        .POS_MISMATCH(100)
     ) detect_right_coin_collision (
         .clk(VGA_VS),
+        .rst_count(state != PLY_0),
+        .ignore_obstacle(is_jumping),
         .player_hoffset(offsetv),
         .player_voffset(offseth),
         .player_lane(player_lane),
@@ -411,19 +426,23 @@ module integration (
         .obst_voffset(coffset[1][2]),
         .obst_lane({2}),
         .count(coin_collision[2]),
-        .despawn(despawn_coin[2])
+        .has_collision(despawn_coin[2])
     );
 
-    logic [2:0] fatal_collision[3:0];
+//    logic [31:0] fatal_collision[3:0];
+
+    logic [5:0] fatal;
     logic isDead;
     initial begin
         isDead = 0;
+        fatal = 0;
     end
-    
-    always@(fatal_collision) begin
-        if (state == PLY_0) begin
-            isDead <= 1;
-            $display("GAME OVER!");
+    always@(VGA_VS) begin
+        if (state == PLY_0 && 
+            fatal != 0
+        ) begin
+            $display("Game over!");
+            isDead <= 1;    
         end else begin
             isDead <= 0;
         end
@@ -431,58 +450,66 @@ module integration (
 
 	collision #(
         .OBST_LANE(2),
-        .COUNT_WIDTH(3)
+        .COUNT_WIDTH(32)
     ) detect_right_tree_collision (
         .clk(VGA_VS),
+        .rst_count(0),
+        .ignore_obstacle(is_jumping),
         .player_hoffset(offsetv),
         .player_voffset(offseth),
         .player_lane(player_lane),
         .obst_hoffset(toffset[0][0]),
         .obst_voffset(toffset[1][0]),
         .obst_lane({1,2}),
-        .count(fatal_collision[0]),
-        .despawn()
+        .count(),//fatal_collision[0]),
+        .has_collision(fatal[1:0])
     );
 	collision #(
         .OBST_LANE(2),
-        .COUNT_WIDTH(3)
+        .COUNT_WIDTH(32)
     ) detect_left_tree_collision (
         .clk(VGA_VS),
+        .rst_count(0),
+        .ignore_obstacle(is_jumping),
         .player_hoffset(offsetv),
         .player_voffset(offseth),
         .player_lane(player_lane),
         .obst_hoffset(toffset[0][1]),
         .obst_voffset(toffset[1][1]),
         .obst_lane({0,1}),
-        .count(fatal_collision[1]),
-        .despawn()
+        .count(),//fatal_collision[1]),
+        .has_collision(fatal[3:2])
     );
 
 	collision #(
-        .COUNT_WIDTH(3)
+        .COUNT_WIDTH(32)
     ) detect_right_rock_collision (
         .clk(VGA_VS),
+        .rst_count(0),
+        .ignore_obstacle(is_jumping),
         .player_hoffset(offsetv),
         .player_voffset(offseth),
         .player_lane(player_lane),
         .obst_hoffset(roffset[0][1]),
         .obst_voffset(roffset[1][1]),
         .obst_lane({2}),
-        .count(fatal_collision[2]),
-        .despawn()
+        .count(),//fatal_collision[2]),
+        .has_collision(fatal[4])
     );
 
 	collision #(
-        .COUNT_WIDTH(3)
+        .COUNT_WIDTH(32)
     ) detect_left_rock_collision (
         .clk(VGA_VS),
+        .rst_count(0),
+        .ignore_obstacle(is_jumping),
         .player_hoffset(offsetv),
         .player_voffset(offseth),
         .player_lane(player_lane),
         .obst_hoffset(roffset[0][0]),
         .obst_voffset(roffset[1][0]),
         .obst_lane({0}),
-        .count(fatal_collision[3]),
-        .despawn()
+        .count(),//fatal_collision[3]),
+        .has_collision(fatal[5])
     );
 endmodule
