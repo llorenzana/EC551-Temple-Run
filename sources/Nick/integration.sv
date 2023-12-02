@@ -328,8 +328,11 @@ module integration (
 
     logic [31:0] points[2:0];
     logic [32:0] score;
-    assign score = points[0] + points[1] + points[2];
-
+    assign score = (state == PLY_0) ? points[0] + points[1] + points[2] : 0;
+    
+    initial begin
+        score = 0;
+    end
     always@(score) begin
         $display("Score: %d", score);
     end
@@ -370,11 +373,15 @@ module integration (
     logic isDead;
     initial begin
         isDead = 0;
-    end 
+    end
     
     always@(fatal_collision) begin
-        isDead <= 1;
-        $display("GAME OVER!");
+        if (state == PLY_0) begin
+            isDead <= 1;
+            $display("GAME OVER!");
+        end else begin
+            isDead <= 0;
+        end
     end
 
 	collision #(
