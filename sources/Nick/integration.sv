@@ -18,7 +18,8 @@ module integration (
     PRE_1,
     PRE_2,
     PRE_3,
-    PLY_0
+    PLY_0,
+    GAME_OVER
   } STATE;
 
   logic [31:0] counter;
@@ -29,7 +30,7 @@ module integration (
 
   STATE state;
 
-  logic [11:0] countdown, offset, offseth, offsetv;
+  logic [11:0] countdown, offset, offseth, offsetv, dead_offset;
   logic [11:0] coffset[1:0][2:0];
   logic [11:0] toffset[1:0][1:0];
   logic [11:0] roffset[1:0][1:0];
@@ -65,6 +66,7 @@ module integration (
         offsetv   <= 0;
         coinfli   <= 0;
         state     <= PRE_0;
+        dead_offset <= 700; // outside of screen
       end
       PRE_0: begin
         // count down
@@ -93,6 +95,13 @@ module integration (
       PLY_0: begin
         // normal game play
         coinfli <= random[0];
+        if (isDead == 1) begin
+            state <= GAME_OVER;
+        end
+      end
+      GAME_OVER: begin
+        // Game over!
+        dead_offset <= 0;
       end
       default: begin
         state <= RESET;
@@ -245,7 +254,7 @@ module integration (
       .active(aactive[3])
   );
 
-  logic [12:0] bus[4:0];
+  logic [12:0] bus[5:0];
 
   layer #(
       .INIT("background.mem")
@@ -331,8 +340,22 @@ module integration (
       .hflip  ({coinfli, coinfli, coinfli}),
       .vflip  ({0, 0, 0}),
       .prev   (bus[4]),
-      .next   ({VGA_R, VGA_G, VGA_B, 1'b0})
+      .next   (bus[5])
   );
+
+    layer #(
+        .INIT("logo.mem") // change to game over
+    ) game_over (
+        .clk(CLK100MHZ),
+        .hdata(hdata),
+        .vdata(vdata),
+        .hoffset({0}),
+        .voffset({dead_offset}),
+        .hflip({0}),
+        .vflip({0}),
+        .prev(bus[5]),
+        .next({VGA_R, VGA_G, VGA_B, 1'b0})
+    );
 
 
     logic [31:0] coin_collision[2:0];
