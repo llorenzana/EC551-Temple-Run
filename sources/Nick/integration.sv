@@ -5,6 +5,7 @@ module integration (
     input  logic       CPU_RESETN,
     input  logic       BTNL,
     input  logic       BTNR,
+    input  logic       BTNU,
     output logic       VGA_HS,
     output logic       VGA_VS,
     output logic [3:0] VGA_R,
@@ -30,7 +31,7 @@ module integration (
 
   STATE state;
 
-  logic [11:0] countdown, offset, offseth, offsetv, dead_offset;
+  logic [11:0] countdown, offset, offseth, offsetv, next_offseth, dead_offset;
   logic [11:0] coffset[1:0][2:0];
   logic [11:0] toffset[1:0][1:0];
   logic [11:0] roffset[1:0][1:0];
@@ -95,6 +96,7 @@ module integration (
       PLY_0: begin
         // normal game play
         coinfli <= random[0];
+        offseth <= next_offseth;
         if (isDead == 1) begin
             state <= GAME_OVER;
         end
@@ -113,6 +115,8 @@ module integration (
     end
 
   end
+
+  jump player_jump(.clk(VGA_VS), .up(BTNU), .pos(offseth), .next_pos(next_offseth)); 
 
   always_ff @(posedge CLK100MHZ) begin
     counter <= counter + 1;
@@ -315,20 +319,6 @@ module integration (
   );
 
   layer #(
-      .INIT("head.mem")
-  ) head (
-      .clk(CLK100MHZ),
-      .hdata(hdata),
-      .vdata(vdata),
-      .hoffset({offsetv}),
-      .voffset({offseth}),
-      .hflip({0}),
-      .vflip({0}),
-      .prev(bus[3]),
-      .next(bus[4])
-  );
-
-  layer #(
       .INIT("coin.mem"),
       .REPLICAS(3)
   ) coin (
@@ -339,8 +329,22 @@ module integration (
       .voffset(coffset[1]),
       .hflip  ({coinfli, coinfli, coinfli}),
       .vflip  ({0, 0, 0}),
-      .prev   (bus[4]),
-      .next   (bus[5])
+      .prev   (bus[3]),
+      .next   (bus[4])
+  );
+
+  layer #(
+      .INIT("head.mem")
+  ) head (
+      .clk(CLK100MHZ),
+      .hdata(hdata),
+      .vdata(vdata),
+      .hoffset({offsetv}),
+      .voffset({offseth}),
+      .hflip({0}),
+      .vflip({0}),
+      .prev(bus[4]),
+      .next(bus[5])
   );
 
     layer #(

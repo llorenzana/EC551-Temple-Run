@@ -85,6 +85,12 @@ int main(int argc, char **argv) {
               top->BTNR = 0;
             }
             break;
+          case SDLK_w:
+            if (e.key.type == SDL_KEYDOWN) {
+                top->BTNU = 1;
+            } else {
+                top->BTNU = 0;
+            }
           }
         }
       }
