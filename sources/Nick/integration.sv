@@ -267,7 +267,7 @@ module integration (
       .active(aactive[3])
   );
 
-  logic [12:0] bus[5:0];
+  logic [12:0] bus[6:0];
 
   layer #(
       .INIT("background.mem")
@@ -298,9 +298,9 @@ module integration (
   );
 
   layer #(
-      .INIT("tree.mem"),
+      .INIT("treeTrunk.mem"),
       .REPLICAS(2)
-  ) tree (
+  ) tree_trunk (
       .clk(CLK100MHZ),
       .hdata(hdata),
       .vdata(vdata),
@@ -356,6 +356,21 @@ module integration (
       .next(bus[5])
   );
 
+  layer #(
+      .INIT("treeLeaves.mem"),
+      .REPLICAS(2)
+  ) tree_leaves (
+      .clk(CLK100MHZ),
+      .hdata(hdata),
+      .vdata(vdata),
+      .hoffset(toffset[0]),
+      .voffset(toffset[1]),
+      .hflip({0, 1}),
+      .vflip({0, 0}),
+      .prev(bus[5]),
+      .next(bus[6])
+  );
+
     layer #(
         .INIT("logo.mem") // change to game over
     ) game_over (
@@ -366,7 +381,7 @@ module integration (
         .voffset({dead_offset}),
         .hflip({0}),
         .vflip({0}),
-        .prev(bus[5]),
+        .prev(bus[6]),
         .next({VGA_R, VGA_G, VGA_B, 1'b0})
     );
 
