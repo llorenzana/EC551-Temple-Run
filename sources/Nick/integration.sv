@@ -28,6 +28,7 @@ module integration (
   /* verilator lint_off UNUSEDSIGNAL */
   logic [19:0] random;
   /* verilator lint_on UNUSEDSIGNAL */
+  logic [2:0] guyflip;
 
   STATE state;
 
@@ -64,7 +65,7 @@ module integration (
       RESET: begin
         countdown <= 5;
         offset    <= 0;
-        offseth   <= 180;
+        offseth   <= 220;
         offsetv   <= 0;
         coinfli   <= 0;
         state     <= PRE_0;
@@ -99,6 +100,7 @@ module integration (
         // normal game play
         coinfli <= random[0];
         offseth <= next_offseth;
+        guyflip <= guyflip + 1;
 
         if (isDead == 1) begin
             state <= GAME_OVER;
@@ -350,7 +352,7 @@ module integration (
       .vdata(vdata),
       .hoffset({offsetv}),
       .voffset({offseth}),
-      .hflip({0}),
+      .hflip({guyflip[2]}),
       .vflip({0}),
       .prev(bus[4]),
       .next(bus[5])
