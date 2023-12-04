@@ -59,6 +59,10 @@ void loop() {
     rPressed();
   }
 
+  if (digitalRead(PIN_W) == HIGH || accelerometer_z < 9000){
+      wPressed();
+  }
+
   while (digitalRead(PIN_A) == HIGH || accelerometer_y > 4500) {
     buf[2] = 4; // A keycode
     Serial.write(buf, 8); // Send keypress
