@@ -55,27 +55,33 @@ void loop() {
   accelerometer_z = Wire.read()<<8 | Wire.read(); // reading registers: 0x3F (ACCEL_ZOUT_H) and 0x40 (ACCEL_ZOUT_L)
   delay(250);
 
-  while (digitalRead(PIN_A) == HIGH || accelerometer_y > 4500) { 
+  if (digitalRead(PIN_R) == HIGH){
+    rPressed();
+  }
+
+  while (digitalRead(PIN_A) == HIGH || accelerometer_y > 4500) {
+    buf[2] = 4; // A keycode
+    Serial.write(buf, 8); // Send keypress
+
+    if (digitalRead(PIN_R) == HIGH){
+      rPressed();
+    } 
     if (digitalRead(PIN_W) == HIGH || accelerometer_z < 9000){
       wPressed();
     }
-    if (digitalRead(PIN_R) == HIGH){
-      rPressed();
-    }
-    buf[2] = 4; // A keycode
-    Serial.write(buf, 8); // Send keypress
   }
     
     //When button representing A is pressed
   while (digitalRead(PIN_D) == HIGH || accelerometer_y < -4500) { 
-    if (digitalRead(PIN_W) == HIGH || accelerometer_z < 9000){
-      wPressed();
-    }
+    buf[2] = 7; // A keycode
+    Serial.write(buf, 8); // Send keypress
+
     if (digitalRead(PIN_R) == HIGH){
       rPressed();
     }
-    buf[2] = 7; // A keycode
-    Serial.write(buf, 8); // Send keypress
+    if (digitalRead(PIN_W) == HIGH || accelerometer_z < 9000){
+      wPressed();
+    }
   }
   
     releaseKey(); 
@@ -110,8 +116,7 @@ void rPressed() {
     score = 0; // Reset the score
     previousMillis= millis(); // Reset the timer
     startScoring = true; // Enable scoring
-    releaseKey();
-    
+
     // Update the display immediately after reset
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -119,6 +124,7 @@ void rPressed() {
     lcd.setCursor(0, 1);
     lcd.print("SCORE: ");
     lcd.print(score);
+
     delay(250);
 }
 
