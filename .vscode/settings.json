@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "atomic": "cpp",
+        "forward_list": "cpp",
+        "ios": "cpp",
+        "system_error": "cpp",
+        "vector": "cpp",
+        "xiosbase": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp"
+    }
+}
