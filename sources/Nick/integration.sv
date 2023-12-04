@@ -343,7 +343,7 @@ module integration (
   );
 
   layer #(
-      .INIT("head.mem")
+      .INIT("runningGuy.mem")
   ) head (
       .clk(CLK100MHZ),
       .hdata(hdata),
@@ -372,7 +372,7 @@ module integration (
   );
 
     layer #(
-        .INIT("logo.mem") // change to game over
+        .INIT("GameOver.mem") // change to game over
     ) game_over (
         .clk(CLK100MHZ),
         .hdata(hdata),
