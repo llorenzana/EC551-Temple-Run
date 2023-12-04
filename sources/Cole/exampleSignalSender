@@ -1,0 +1,24 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+
+#include <CSerialPort> // Example library for serial communication
+
+int main() {
+  CSerialPort arduino("\\\\.\\COM3"); // Replace Arduino's serial port
+
+  if (arduino.isConnected()) {
+    // Sending signal A
+    arduino.writeSerialPort("A", 1); // Code to send first needed signal
+
+    // Sending signal B
+    arduino.writeSerialPort("B", 1); // Code to send second needed signal
+
+    // Add more signals as needed
+  } else {
+    std::cout << "Couldn't connect to the serial port." << std::endl;
+  }
+
+  return 0;
+}
