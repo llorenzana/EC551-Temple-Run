@@ -77,7 +77,7 @@ void loop() {
     buf[2] = 7; // A keycode
     Serial.write(buf, 8); // Send keypress
   }
-
+  
     releaseKey(); 
     printscore();
 }
@@ -110,6 +110,8 @@ void rPressed() {
     score = 0; // Reset the score
     previousMillis= millis(); // Reset the timer
     startScoring = true; // Enable scoring
+    releaseKey();
+    
     // Update the display immediately after reset
     lcd.clear();
     lcd.setCursor(0, 0);
