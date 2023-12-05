@@ -4,7 +4,9 @@
 
 ## Table of Contents
 [Overview](#Overview)  
-[Video](#Video)
+
+[Video](#Video) 
+
 [Presentation](#Presentation)  
 
 ## Overview 
