@@ -14,3 +14,8 @@
 
 
 ## Presentation
+PowerPoint: 
+[EvilDemonMokeys_EC551_FinalProject.pptx](https://github.com/llorenzana/EC551-Temple-Run/files/13562634/EvilDemonMokeys_EC551_FinalProject.pptx)
+
+PDF:
+[EvilDemonMokeys_EC551_FinalProject.pdf](https://github.com/llorenzana/EC551-Temple-Run/files/13562642/EvilDemonMokeys_EC551_FinalProject.pdf)
