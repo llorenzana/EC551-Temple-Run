@@ -9,15 +9,13 @@ uint8_t buf[8] = { 0 }; //Keyboard report buffer
 #define PIN_R 4 // Pin for reset
 
 const int MPU_ADDR = 0x68; // I2C address of the MPU-6050. If AD0 pin is set to HIGH, the I2C address will be 0x69.
-int16_t accelerometer_x, accelerometer_y, accelerometer_z; // variables for accelerometer raw data
-char tmp_str[7]; // temporary variable used in convert function
-
-LiquidCrystal_I2C lcd(0x20, 16, 2); // Format -> (Address, Width, Height)
-
+int16_t accelerometer_x, accelerometer_y; // variables for accelerometer raw data
 unsigned long previousMillis = 0;
 const long interval = 590; // Interval in milliseconds
 int score = 0;
 bool startScoring = false;
+
+LiquidCrystal_I2C lcd(0x20, 16, 2); // Format -> (Address, Width, Height)
 
 void setup() {
   // Initialize LCD
@@ -56,48 +54,54 @@ void loop() {
     rPressed();
   }
 
+
   if (digitalRead(PIN_W) == HIGH ){
       wPressed();
   }
+  
+
 
   while (digitalRead(PIN_A) == HIGH || accelerometer_y > 4500) {
     buf[2] = 4; // A keycode
     Serial.write(buf, 8); // Send keypress
+
+    if (digitalRead(PIN_R) == HIGH){
+      rPressed();
+    } 
+
+    if (digitalRead(PIN_W) == HIGH ){
+      wPressed();
+    }
+
     Wire.beginTransmission(MPU_ADDR);
     Wire.write(0x3B); // starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
     Wire.endTransmission(false); // the parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
     Wire.requestFrom(MPU_ADDR, 7*2, true); // request a total of 7*2=14 registers
     accelerometer_x = Wire.read()<<8 | Wire.read(); // reading registers: 0x3B (ACCEL_XOUT_H) and 0x3C (ACCEL_XOUT_L)
     accelerometer_y = Wire.read()<<8 | Wire.read(); 
-
-    if (digitalRead(PIN_R) == HIGH){
-      rPressed();
-    } 
-    if (digitalRead(PIN_W) == HIGH ){
-      wPressed();
-    }
-
   }
     
     //When button representing A is pressed
   while (digitalRead(PIN_D) == HIGH || accelerometer_y < -4500) { 
     buf[2] = 7; // A keycode
-    Serial.write(buf, 8); // Send keypress
+    Serial.write(buf, 8); // Send keypress 
+
+    if (digitalRead(PIN_R) == HIGH){
+      rPressed();
+    }
+    if (digitalRead(PIN_W) == HIGH){
+      wPressed();
+    }
+
     Wire.beginTransmission(MPU_ADDR);
     Wire.write(0x3B); // starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
     Wire.endTransmission(false); // the parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
     Wire.requestFrom(MPU_ADDR, 7*2, true); // request a total of 7*2=14 registers
     accelerometer_x = Wire.read()<<8 | Wire.read(); // reading registers: 0x3B (ACCEL_XOUT_H) and 0x3C (ACCEL_XOUT_L)
-    accelerometer_y = Wire.read()<<8 | Wire.read(); 
-
-    if (digitalRead(PIN_R) == HIGH){
-      rPressed();
-    }
-    if (digitalRead(PIN_W) == HIGH ){
-      wPressed();
-    }
+    accelerometer_y = Wire.read()<<8 | Wire.read();
   }
   
+  releaseKey(); 
   printscore();
 }
 
@@ -130,6 +134,7 @@ void rPressed() {
     previousMillis= millis(); // Reset the timer
     startScoring = true; // Enable scoring
     releaseKey(); 
+    delay(85);
     // Update the display immediately after reset
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -137,8 +142,6 @@ void rPressed() {
     lcd.setCursor(0, 1);
     lcd.print("SCORE: ");
     lcd.print(score);
-
-    delay(250);
 }
 
 void wPressed() {
