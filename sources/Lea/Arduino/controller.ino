@@ -48,49 +48,57 @@ void loop() {
   Wire.write(0x3B); // starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
   Wire.endTransmission(false); // the parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
   Wire.requestFrom(MPU_ADDR, 7*2, true); // request a total of 7*2=14 registers
-  
   // "Wire.read()<<8 | Wire.read();" means two registers are read and stored in the same variable
   accelerometer_x = Wire.read()<<8 | Wire.read(); // reading registers: 0x3B (ACCEL_XOUT_H) and 0x3C (ACCEL_XOUT_L)
   accelerometer_y = Wire.read()<<8 | Wire.read(); 
-  accelerometer_z = Wire.read()<<8 | Wire.read(); // reading registers: 0x3F (ACCEL_ZOUT_H) and 0x40 (ACCEL_ZOUT_L)
-  delay(250);
 
   if (digitalRead(PIN_R) == HIGH){
-    buf[2] = 21; // r 
-    Serial.write(buf, 8); // Send keypress
-    score = 0; // Reset the score
-    previousMillis= millis(); // Reset the timer
-    startScoring = true; // Enable scoring
-    // Update the display immediately after reset
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("551 TEMPLE RUN");
-    lcd.setCursor(0, 1);
-    lcd.print("SCORE: ");
-    lcd.print(score);
-    delay(250);
+    rPressed();
   }
 
-  if (digitalRead(PIN_W) == HIGH || accelerometer_z < 9000) {
-      buf[2] = 26; // W keycode
-      Serial.write(buf, 8); // Send keypress
-      releaseKey(); 
+  if (digitalRead(PIN_W) == HIGH ){
+      wPressed();
   }
-    
 
-  while (digitalRead(PIN_A) == HIGH || accelerometer_y > 4500) { 
+  while (digitalRead(PIN_A) == HIGH || accelerometer_y > 4500) {
     buf[2] = 4; // A keycode
     Serial.write(buf, 8); // Send keypress
+    Wire.beginTransmission(MPU_ADDR);
+    Wire.write(0x3B); // starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
+    Wire.endTransmission(false); // the parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
+    Wire.requestFrom(MPU_ADDR, 7*2, true); // request a total of 7*2=14 registers
+    accelerometer_x = Wire.read()<<8 | Wire.read(); // reading registers: 0x3B (ACCEL_XOUT_H) and 0x3C (ACCEL_XOUT_L)
+    accelerometer_y = Wire.read()<<8 | Wire.read(); 
+
+    if (digitalRead(PIN_R) == HIGH){
+      rPressed();
+    } 
+    if (digitalRead(PIN_W) == HIGH ){
+      wPressed();
+    }
+
   }
     
     //When button representing A is pressed
   while (digitalRead(PIN_D) == HIGH || accelerometer_y < -4500) { 
-      buf[2] = 7; // A keycode
-      Serial.write(buf, 8); // Send keypress
-  }
+    buf[2] = 7; // A keycode
+    Serial.write(buf, 8); // Send keypress
+    Wire.beginTransmission(MPU_ADDR);
+    Wire.write(0x3B); // starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
+    Wire.endTransmission(false); // the parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
+    Wire.requestFrom(MPU_ADDR, 7*2, true); // request a total of 7*2=14 registers
+    accelerometer_x = Wire.read()<<8 | Wire.read(); // reading registers: 0x3B (ACCEL_XOUT_H) and 0x3C (ACCEL_XOUT_L)
+    accelerometer_y = Wire.read()<<8 | Wire.read(); 
 
-    releaseKey(); 
-    printscore();
+    if (digitalRead(PIN_R) == HIGH){
+      rPressed();
+    }
+    if (digitalRead(PIN_W) == HIGH ){
+      wPressed();
+    }
+  }
+  
+  printscore();
 }
 
 // Function for Key Release
@@ -113,4 +121,28 @@ void printscore() {
     lcd.print("SCORE: ");
     lcd.print(score);
   }
+}
+
+void rPressed() {
+    buf[2] = 21; // r 
+    Serial.write(buf, 8); // Send keypress
+    score = 0; // Reset the score
+    previousMillis= millis(); // Reset the timer
+    startScoring = true; // Enable scoring
+    releaseKey(); 
+    // Update the display immediately after reset
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("551 TEMPLE RUN");
+    lcd.setCursor(0, 1);
+    lcd.print("SCORE: ");
+    lcd.print(score);
+
+    delay(250);
+}
+
+void wPressed() {
+      buf[2] = 26; // W keycode
+      Serial.write(buf, 8); // Send keypress
+      releaseKey();
 }
