@@ -4,8 +4,8 @@
 
 ## Table of Contents
 [Overview](#Overview)  
-[Presentation](#Presentation)  
 [Video](#Video)
+[Presentation](#Presentation)  
 
 ## Overview 
 
@@ -15,7 +15,7 @@
 
 ## Presentation
 PowerPoint: 
-[EvilDemonMokeys_EC551_FinalProject.pptx](https://github.com/llorenzana/EC551-Temple-Run/files/13562689/EvilDemonMokeys_EC551_FinalProject.pptx)
+[EvilDemonMonkeys_EC551_FinalProject.pptx](https://github.com/llorenzana/EC551-Temple-Run/files/13562709/EvilDemonMonkeys_EC551_FinalProject.pptx)
 
 PDF:
-[EvilDemonMokeys_EC551_FinalProject.pdf](https://github.com/llorenzana/EC551-Temple-Run/files/13562692/EvilDemonMokeys_EC551_FinalProject.pdf)
+[EvilDemonMonkeys_EC551_FinalProject.pdf](https://github.com/llorenzana/EC551-Temple-Run/files/13562707/EvilDemonMonkeys_EC551_FinalProject.pdf)
