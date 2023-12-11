@@ -1,3 +1,11 @@
+# TEMPLE RUN GAME PLAY
+
+[Play The Game](#play-game)   
+[Instructions](#instructions)   
+[Controller Options](#controller-options)   
+
+## Play The Game: 
+
 ### dependencies
 - cmake 
 - verilator
@@ -12,7 +20,12 @@ cmake ..
 # link resource files
 ln -sr ../../../artwork/*.mem .
 # build
-make -j
-# run integration test
-./Vintegration
 ```
+
+
+## Instructions: 
+
+
+## Controller Options: 
+
+
