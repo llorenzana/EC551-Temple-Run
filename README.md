@@ -3,11 +3,10 @@
 ### Julia Hua, Lea Lorenzana-Garcia, Cole Wentzel, Juncheng Cao
 
 ## Table of Contents
-[Overview](#Overview)  
-
-[Video](#Video) 
-
-[Presentation](#Presentation)  
+[Overview](#Overview)    
+[Temple Run Final Game](#temple-run-final-game)
+[Video](#Video)   
+[Presentation](#Presentation)    
 
 []()
 
@@ -15,7 +14,7 @@
 
 ## Temple Run Final Game
 
-[Game Files and Instructions](#)
+[Game Files and Instructions](https://github.com/llorenzana/EC551-Temple-Run/tree/8493f946432f0184e7320c690e4eb9cdb64fa4bf/TempleRun)
 
 ## Video
 
