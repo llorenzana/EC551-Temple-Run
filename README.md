@@ -4,7 +4,7 @@
 
 ## Table of Contents
 [Overview](#Overview)    
-[Temple Run Final Game](#temple-run-final-game)
+[Temple Run Final Game](#temple-run-final-game)   
 [Video](#Video)   
 [Presentation](#Presentation)    
 
