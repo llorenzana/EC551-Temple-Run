@@ -32,7 +32,7 @@ The game has no end – the goal is to run as far as possible before the charact
 
 ## Temple Run Final Game
 
-Final game files and instructions on how to run it can be found [here.](https://github.com/llorenzana/EC551-Temple-Run/tree/831f1d11058008a62187ec0f4704305f2680bac6/TempleRun)
+Final game files and instructions on how to run it can be found [here.](https://github.com/llorenzana/EC551-Temple-Run/tree/main/TempleRun)
 
 ## Video
 Our demo video can be found [here](https://drive.google.com/file/d/1vWfCZZATm9TVDm4s-_InY8upbGKc-1SO/view?usp=sharing).
