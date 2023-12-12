@@ -35,7 +35,7 @@ The game has no end – the goal is to run as far as possible before the charact
 Final game files and instructions on how to run it can be found [here.](https://github.com/llorenzana/EC551-Temple-Run/tree/8493f946432f0184e7320c690e4eb9cdb64fa4bf/TempleRun) 
 
 ## Video
-Our demo video can be found [here](https://drive.google.com/file/d/1vWfCZZATm9TVDm4s-_InY8upbGKc-1SO/view?usp=sharing):
+Our demo video can be found [here](https://drive.google.com/file/d/1vWfCZZATm9TVDm4s-_InY8upbGKc-1SO/view?usp=sharing).
 
 ## Presentation
 ### PowerPoint:    
