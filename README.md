@@ -16,16 +16,16 @@
 Our goal was to create a functional Temple Run game using Verilog and the lab FPGA’s. However due to lab issues, we decided to pivot to creating a simulated game environment using Verilator and creating our own Arduino controller. 
 
 ### 1. Basic Gameplay:   
-The [player](https://github.com/llorenzana/EC551-Temple-Run/blob/01039bae203b92ea97bb5b006a89ae75101e59b7/artwork/runningGuy.png) controls a character who is fleeing from a group of **Evil Demon Monkeys**. The game takes place on a 3-lane pathway in which the player must navigate through various obstacles by using an associated keyboard key or using our arduino game controller.
+The [player](https://github.com/llorenzana/EC551-Temple-Run/blob/main/artwork/runningGuy.png) controls a character who is fleeing from a group of **Evil Demon Monkeys**. The game takes place on a 3-lane pathway in which the player must navigate through various obstacles by using an associated keyboard key or using our arduino game controller.
 
 ### 2. Obstacles & Mechanics:      
-The path is filled with obstacles such as [rocks](https://github.com/llorenzana/EC551-Temple-Run/blob/ba1a577e85239d2e4d2718023eed6645fe025ff0/artwork/rock.png) and [trees](https://github.com/llorenzana/EC551-Temple-Run/blob/ba1a577e85239d2e4d2718023eed6645fe025ff0/artwork/tree.png). The obstacles are generated using a pseudo-random generator with three states indicating where it is on the screen. The player can press a **W**  to jump, hold **A** or tilt the controller left to move into the leftmost lane, or hold **D** or tilt the controller left to move into the right most lane.
+The path is filled with obstacles such as [rocks](https://github.com/llorenzana/EC551-Temple-Run/blob/main/artwork/rock.png) and [trees](https://github.com/llorenzana/EC551-Temple-Run/blob/main/artwork/tree.png). The obstacles are generated using a pseudo-random generator with three states indicating where it is on the screen. The player can press a **W**  to jump, hold **A** or tilt the controller left to move into the leftmost lane, or hold **D** or tilt the controller left to move into the right most lane.
 
 ### 3. Coins:      
-As the character runs, they can collect [coins](https://github.com/llorenzana/EC551-Temple-Run/blob/ba1a577e85239d2e4d2718023eed6645fe025ff0/artwork/coin.png). These coins are added to the scorekeeper that prints to the terminal. These coins are generated using the same pseudo-random generator that spawns the rocks and tree roots. 
+As the character runs, they can collect [coins](https://github.com/llorenzana/EC551-Temple-Run/blob/main/artwork/coin.png). These coins are added to the scorekeeper that prints to the terminal. These coins are generated using the same pseudo-random generator that spawns the rocks and tree roots. 
 
 ### 4. Graphics:   
-Our game uses [sprites](https://github.com/llorenzana/EC551-Temple-Run/tree/ba1a577e85239d2e4d2718023eed6645fe025ff0/artwork) created by one of our team members and uses memory optimization techniques based off  of Nintendo NES games. We mirror frames to make the character emulate walking, flip coins to give them a **shining** effect,  and flipping obstacles to ensure proper lane adjustments. 
+Our game uses [sprites](https://github.com/llorenzana/EC551-Temple-Run/tree/main/artwork) created by one of our team members and uses memory optimization techniques based off  of Nintendo NES games. We mirror frames to make the character emulate walking, flip coins to give them a **shining** effect,  and flipping obstacles to ensure proper lane adjustments. 
 
 ### 5. Endless Running:    
 The game has no end – the goal is to run as far as possible before the character meets an untimely end by  running into an obstacle.
