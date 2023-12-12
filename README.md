@@ -9,8 +9,6 @@
 [Video](#Video)   
 [Presentation](#Presentation)    
 
-[]()
-
 ## Overview 
 "Temple Run '' is a popular “endless-runner” mobile game known for its simplicity of game controls combined with its challenging and addictive nature.  The original game is set in a temple environment, and the character must navigate through various obstacles by swiping on the touchscreen or tilting the device. The player controls a character who is fleeing from a group of **Evil Demon Monkeys** trying to steal and **IDOL**.
 
@@ -21,7 +19,7 @@ Our goal was to create a functional Temple Run game using Verilog and the lab FP
 The player controls a character who is fleeing from a group of **Evil Demon Monkeys**. The game takes place on a 3-lane pathway in which the player must navigate through various obstacles by using an associated keyboard key or using our arduino game controller.
 
 ### 2. Obstacles & Mechanics:      
-The path is filled with obstacles such as [rocks](https://github.com/llorenzana/EC551-Temple-Run/blob/ba1a577e85239d2e4d2718023eed6645fe025ff0/artwork/rock.png) and [trees](https://github.com/llorenzana/EC551-Temple-Run/blob/ba1a577e85239d2e4d2718023eed6645fe025ff0/artwork/tree.png). The obstacles are generated using a pseudo-random generator with three states indicating where it is on the screen. The player can press a **J**  to jump, hold **A** or tilt the controller left to move into the leftmost lane, or hold **D** or tilt the controller left to move into the right most lane.
+The path is filled with obstacles such as [rocks](https://github.com/llorenzana/EC551-Temple-Run/blob/ba1a577e85239d2e4d2718023eed6645fe025ff0/artwork/rock.png) and [trees](https://github.com/llorenzana/EC551-Temple-Run/blob/ba1a577e85239d2e4d2718023eed6645fe025ff0/artwork/tree.png). The obstacles are generated using a pseudo-random generator with three states indicating where it is on the screen. The player can press a **W**  to jump, hold **A** or tilt the controller left to move into the leftmost lane, or hold **D** or tilt the controller left to move into the right most lane.
 
 ### 3. Coins:      
 As the character runs, they can collect [coins](https://github.com/llorenzana/EC551-Temple-Run/blob/ba1a577e85239d2e4d2718023eed6645fe025ff0/artwork/coin.png). These coins are added to the scorekeeper that prints to the terminal. These coins are generated using the same pseudo-random generator that spawns the rocks and tree roots. 
