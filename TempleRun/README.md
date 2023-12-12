@@ -4,6 +4,7 @@
 [Game Instructions](#game-instructions)   
 [Controller Options](#controller-options)   
 
+
 ## Play The Game: 
 To play the game, clone the [GitHub](https://github.com/llorenzana/EC551-Temple-Run.git) and navigate to the [Temple Run Folder](https://github.com/llorenzana/EC551-Temple-Run/edit/main/TempleRun). Follow the below set of instructions to run the game using Verilator. 
 
