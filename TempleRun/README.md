@@ -54,4 +54,4 @@ To play, the user has 4-button controls. The goal is to avoid obstacles and coll
   ### D --> Move Right, Hold to Stay in Right Most Lane 
 
 ## Controller Options: 
-The user can choose to either use their keyboard or create the [Arduino Controller](https://github.com/llorenzana/EC551-Temple-Run/tree/97b7e72c2247b2ecc3335fe7bb821a488bc9b463/sources/Lea/Arduino) we used in our demo. If using the arduino controller you can tilt left for **A** (move left), tilt right for **D** (move right), or use the associated push-buttons.  
+The user can choose to either use their keyboard or create the [Arduino Controller](https://github.com/llorenzana/EC551-Temple-Run/tree/main/sources/Lea/Arduino) we used in our demo. If using the arduino controller you can tilt left for **A** (move left), tilt right for **D** (move right), or use the associated push-buttons.  
