@@ -36,7 +36,7 @@ Set the board to DFU mode so we can reporgram the flash and turn our board into 
 ![DFU](https://github.com/llorenzana/EC551-Temple-Run/blob/56d7308af50fffbdbf072b26f358737b1a4a0ee0/sources/Lea/Arduino/images/UNO-DFU-reset-pins.png)
 
 5.  Briefly short the pins
-6.  FLIP - Press the USB Icon in FLIP and Then Open
+6.  FLIP - Press the USB Icon in FLIP and Then Open   
 ![USB Select](https://github.com/llorenzana/EC551-Temple-Run/blob/37d0f9fdfa7a836b4893acfc67ec822981734b63/sources/Lea/Arduino/images/open%20USB%20port.png)
 
 7.  FLIP - Parse the Firmware HEX. Load the [arduino-keyboard.hex](https://github.com/llorenzana/EC551-Temple-Run/blob/37d0f9fdfa7a836b4893acfc67ec822981734b63/sources/Lea/Arduino/HEX/Arduino-keyboard-0.3.hex) into FLIP. You will see at the bottom USB ON, this is that the Arduino is connected through DFU Mode.
