@@ -36,6 +36,12 @@ Final game files and instructions on how to run it can be found [here.](https://
 
 ## Video
 Our demo video can be found [here](https://drive.google.com/file/d/1vWfCZZATm9TVDm4s-_InY8upbGKc-1SO/view?usp=sharing).
+### Video Title: EC551 Run - Endless Maze Runner Game
+### Video Description: 
+Team Evil Demon Monkeys   
+Team Members: Julia Hua, Lea Lorenzana-Garcia, Cole Wentzel, and Juncheng Cao  
+
+Our goal was to create a functional Temple Run game using Verilog and the Nexys A7 100T. However, due to unforseen circumstances we decided to pivot to creating a simulated game environment using Verilator and creating our own Arduino controller. The game takes place on a 3-lane pathway in which the player, who is fleeing from a group of Evil Demon Monkeys, must navigate through various obstacles by using an associated keyboard key or using our arduino game controller. Our presentation and other game documentation can be found on our GitHub https://github.com/llorenzana/EC551-Temple-Run 
 
 ## Presentation
 ### PowerPoint:    
