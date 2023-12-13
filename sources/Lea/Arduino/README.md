@@ -4,7 +4,7 @@
 [What You Will Need](#what-you-will-need)   
 [How To Build](#how-to-build)   
 
-## You Will Need
+## What You Will Need
 - 1 Arduino Uno R3
 - 4 1k Ohm Resistors
 - 4 Push Buttons (One for each corresponding key)
