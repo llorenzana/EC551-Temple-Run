@@ -23,7 +23,7 @@ Navigate to the [Accelerometer.ino](https://github.com/llorenzana/EC551-Temple-R
 Follow the following circuit diagram to correspond to the code provided. 
 ![Circuit](https://github.com/llorenzana/EC551-Temple-Run/blob/56d7308af50fffbdbf072b26f358737b1a4a0ee0/sources/Lea/Arduino/images/Circuit.png) 
 
-### Step 3: Reprogram the Ardiuno Flash 
+### Step 3: Reprogram the Arduino Flash 
 Set the board to DFU mode so we can reporgram the flash and turn our board into a HID keyboard for fun game play. 
 1. Connect the board to your computer
 2. Install [JRE - Flip Installer - 3.4.7.112.exe](https://www.microchip.com/en-us/development-tool/flip)
